@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShooting
   range: 3
-  fireRate: 0.15
+  fireRate: 0.3
   partToRotate: {fileID: 4790796863724741505}
   bulletPrefab: {fileID: 3380242773957498634, guid: 0d4caf4f73b0d60469bd2cd94d001676, type: 3}
   firePoint: {fileID: 0}

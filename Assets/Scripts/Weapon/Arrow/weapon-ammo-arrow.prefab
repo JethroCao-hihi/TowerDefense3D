@@ -77,4 +77,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d39bb749d0e0fe4a8d4eecdf9d669c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowProjectile
-  speed: 15
+  speed: 10
+  damege: 15

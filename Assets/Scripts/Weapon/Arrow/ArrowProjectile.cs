@@ -4,6 +4,7 @@ public class ArrowProjectile : MonoBehaviour
 {
     private Transform target;
     public float speed = 15f;
+    public float damege = 20f;
 
     public void Seek(Transform _target)
     {
@@ -13,7 +14,8 @@ public class ArrowProjectile : MonoBehaviour
     {
      if (target == null)
         {
-            Destroy(gameObject); return;
+            Destroy(gameObject); 
+            return;
         }   
      Vector3 dir = target.position - transform.position;    
         float distanceThisFrame = speed * Time.deltaTime;
@@ -29,7 +31,12 @@ public class ArrowProjectile : MonoBehaviour
     }
     void HitTarget()
     {
-        Destroy(target.gameObject);
+        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(damege);
+        }
+
         Destroy(gameObject);
     }
 }

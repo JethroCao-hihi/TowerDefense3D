@@ -4,6 +4,7 @@ public class Cannonball : MonoBehaviour
 {
     private Transform target;
     public float speed = 10f;
+    public float damege = 25f;
 
     public void Seek(Transform _target)
     {
@@ -32,7 +33,12 @@ public class Cannonball : MonoBehaviour
     
     void HitTarget()
     {
-        Destroy(target.gameObject);
+        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(damege);
+        }
+        
         Destroy(gameObject);
     }
 }

@@ -77,5 +77,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc8ff846787855a49bb27285b50abba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatapultRock
-  speed: 10
+  speed: 8
   areHeight: 3
+  damege: 30

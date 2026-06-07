@@ -15,6 +15,18 @@ public class EnemyMovement : MonoBehaviour
         if (endPoint != null) MoveToTarget();
     }
 
+    void Update()
+    {
+        if (Time.timeScale == 0f)
+        {
+            if (agent != null && agent.isActiveAndEnabled)
+            {
+                agent.isStopped = true;
+            }
+            return;
+        }
+    }
+
     public void SetTarget(Transform target)
     {
         endPoint = target;
@@ -33,14 +45,13 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    // CÁCH SIÊU ĐƠN GIẢN: Tự động chạy khi thân quái chạm vào vùng End
     private void OnTriggerEnter(Collider other)
     {
-        // Kiểm tra xem có phải vừa chạm vào điểm có Tag "Finish" không
+        if (Time.timeScale == 0f) return;
+
         if (other.CompareTag("Finish"))
         {
-            Debug.Log($"🎯 {gameObject.name} đã va chạm điểm End và bị xóa!");
-            Destroy(gameObject); // Xóa quái
+            Destroy(gameObject);
         }
     }
 }

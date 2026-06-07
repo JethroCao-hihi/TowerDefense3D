@@ -5,6 +5,7 @@ public class CatapultRock : MonoBehaviour
     private Transform target;
     public float speed = 10f;
     public float areHeight = 3f;
+    public float damege = 30f;
 
     private Vector3 startPos;
     private float progress = 0f;
@@ -41,7 +42,12 @@ public class CatapultRock : MonoBehaviour
     }
     void HitTarget()
     {
-        Destroy(target.gameObject);
+        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(damege);
+        }
+
         Destroy(gameObject);
     }
 }

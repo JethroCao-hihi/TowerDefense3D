@@ -121,9 +121,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df4a925982183848b347ec2067edc8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShooting
-  range: 4
-  fireRate: 4
+  range: 5
+  fireRate: 2.5
   partToRotate: {fileID: 465513761765367453}
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 2663528022458102659, guid: 9f31dbb16e29d0c48ad434b89bb80ef2, type: 3}
   firePoint: {fileID: 6307210259266639847}
+  dualFirePoints: []
   enemyTag: Enemy

@@ -3,29 +3,27 @@
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Prefab & Target")]
-    [Tooltip("Kéo thả Prefab Enemy từ ô Project vào đây")]
+    [Tooltip("Drag and drop the Enemy Prefab from the Project window here")]
     public GameObject enemyPrefab;
 
-    [Tooltip("Kéo thả điểm Đích (End Point) từ Hierarchy vào đây")]
+    [Tooltip("Drag and drop the End Point from the Hierarchy here")]
     public Transform endPoint;
 
     [Header("Spawn Locations")]
-    [Tooltip("Thay đổi Size thành 3 và kéo thả 3 ô Spawn vào đây")]
-    public Transform[] spawnPoints; // Mảng chứa danh sách các điểm spawn
+    [Tooltip("Change the Size to 3 and drag and drop 3 Spawn Points here")]
+    public Transform[] spawnPoints;
 
     [Header("Spawn Settings")]
-    [Tooltip("Thời gian giãn cách giữa mỗi lần sinh quái (giây)")]
+    [Tooltip("Time interval between each enemy spawn (seconds)")]
     public float spawnInterval = 3f;
 
     void Start()
     {
-        // Bắt đầu lặp lại việc sinh quái
         InvokeRepeating(nameof(SpawnEnemy), 1f, spawnInterval);
     }
 
     void SpawnEnemy()
     {
-        // Kiểm tra an toàn xem bạn đã gán đủ đồ trong Inspector chưa
         if (enemyPrefab == null || endPoint == null)
         {
             Debug.LogWarning("Spawner bị thiếu Enemy Prefab hoặc End Point!");
@@ -38,22 +36,17 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        // 1. Lấy ngẫu nhiên một chỉ số (Index) trong mảng spawnPoints
-        // Random.Range(int, int) trong Unity sẽ lấy từ min đến max-1, vừa khít với độ dài mảng
         int randomIndex = Random.Range(0, spawnPoints.Length);
         Transform chosenSpawnPoint = spawnPoints[randomIndex];
 
-        // Phòng trường hợp bạn gán thiếu phần tử trong mảng
         if (chosenSpawnPoint == null)
         {
             Debug.LogWarning($"Ô Spawn ở vị trí thứ {randomIndex} đang bị trống (None)!");
             return;
         }
 
-        // 2. Sinh con quái ra ngay tại vị trí và góc xoay của ô Spawn ngẫu nhiên vừa chọn
         GameObject spawnedEnemy = Instantiate(enemyPrefab, chosenSpawnPoint.position, chosenSpawnPoint.rotation);
 
-        // 3. Tìm script EnemyMovement trên con quái để đưa điểm đích cho nó chạy
         EnemyMovement movement = spawnedEnemy.GetComponent<EnemyMovement>();
         if (movement != null)
         {

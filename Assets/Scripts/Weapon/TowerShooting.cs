@@ -2,42 +2,41 @@
 
 public class TowerShooting : MonoBehaviour
 {
-    [Header("Chỉ số Trụ")]
+    [Header("Pillar Index")]
     public float range = 3f;
-    public float fireRate = 0.15f;  // Súng máy thì nạp đạn cực nhanh (0.15 giây/viên)
+    public float fireRate = 0.15f;
     private float fireCountdown = 0f;
 
-    [Header("Cài đặt vật thể")]
+    [Header("Object Settings")]
     public Transform partToRotate;
     public GameObject bulletPrefab;
 
-    [Tooltip("Dùng cho tháp 1 nòng (Đại bác, Nỏ, Đá)")]
+    [Tooltip("For single-barrel towers")]
     public Transform firePoint;
 
-    [Tooltip("Dùng cho tháp nhiều nòng (Súng máy)")]
+    [Tooltip("For multi-barrel towers")]
     public Transform[] dualFirePoints;
-    private int currentFirePointIndex = 0; // Bộ đếm đổi nòng
+    private int currentFirePointIndex = 0;
 
-    [Header("Mục tiêu")]
+    [Header("Targeting")]
     public string enemyTag = "Enemy";
     private Transform target;
 
     void Update()
     {
-        UpdateTarget();
+        if (Time.timeScale == 0f) return;
 
+        UpdateTarget();
         if (target == null) return;
 
-        // 1. Xoay nòng súng
         Vector3 dir = target.position - transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         Vector3 rotation = lookRotation.eulerAngles;
         partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
 
-        // 2. Kích hoạt bắn
         if (fireCountdown <= 0f)
         {
-            Shoot(); // Cứ hết thời gian nạp đạn là bắn 1 viên
+            Shoot();
             fireCountdown = fireRate;
         }
         fireCountdown -= Time.deltaTime;
@@ -72,18 +71,12 @@ public class TowerShooting : MonoBehaviour
     void Shoot()
     {
         Transform spawnPoint = firePoint;
-
-        // Nếu là tháp súng máy (có 2 nòng trở lên)
         if (dualFirePoints != null && dualFirePoints.Length > 0)
         {
-            // Lấy nòng súng hiện tại
             spawnPoint = dualFirePoints[currentFirePointIndex];
-
-            // Đảo nòng súng cho lần bắn kế tiếp (0 -> 1 -> 0 -> 1)
             currentFirePointIndex = (currentFirePointIndex + 1) % dualFirePoints.Length;
         }
 
-        // Khạc đạn
         GameObject bulletGO = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
         bulletGO.SendMessage("Seek", target, SendMessageOptions.DontRequireReceiver);
     }
