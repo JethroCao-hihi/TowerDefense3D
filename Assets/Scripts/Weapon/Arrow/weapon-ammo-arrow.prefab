@@ -78,4 +78,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowProjectile
   speed: 10
-  damege: 15
+  damege: 20

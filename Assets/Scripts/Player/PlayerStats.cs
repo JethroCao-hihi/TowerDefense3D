@@ -51,6 +51,14 @@ public class PlayerStats : MonoBehaviour
 
     void GameOver()
     {
+        // === GẮN BƯỚC 2 VÀO ĐÂY ===
+        // Báo cáo cho bên WaveManager biết là người chơi đã thua để nó hiện UI "DEFEAT"
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.GameLost();
+        }
+
+        // Khóa đứng thời gian toàn game (Tháp ngừng bắn, quái ngừng đi)
         Time.timeScale = 0f;
     }
 }

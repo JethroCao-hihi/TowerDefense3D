@@ -3,46 +3,56 @@ using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
 using System.Collections;
-using System.Collections.Generic; // BẮT BUỘC: Để sử dụng cấu trúc Dictionary
+using System.Collections.Generic;
 
 public class TowerPlacementManager : MonoBehaviour
 {
-    // Hệ thống trạng thái (Build: Xây tháp, Delete: Xóa tháp)
+    public static TowerPlacementManager Instance;
     public enum PlacementMode { Build, Delete }
     private PlacementMode currentMode = PlacementMode.Build;
 
     [Header("Selection A (Khung ngắm di chuyển)")]
     public GameObject indicatorRoot;
     public Renderer indicatorRenderer;
-    public Material invalidMaterial;   // Vật liệu Đỏ (Sai vị trí)
-    public Material deleteMaterial;    // Vật liệu Cam/Vàng (Chỉ vào tháp cần xóa)
+    public Material invalidMaterial;
+    public Material deleteMaterial;
 
     [Header("Selection B (Hiệu ứng khi đặt xong)")]
     public GameObject buildSuccessPrefab;
     public float effectDuration = 0.5f;
 
     [Header("Giao diện UI Xác nhận xóa")]
-    public GameObject confirmationPanel; // Kéo bảng Panel UI Yes/No vào đây
+    public GameObject confirmationPanel;
 
     [Header("Bản đồ Đường đi")]
     public Tilemap[] obstacleTilemaps;
 
     [Header("Shop Tower")]
     public GameObject[] availableTowers;
+    public int[] towerPrices;
     private GameObject towerToBuild;
+    private int selectedTowerIndex = 0;
 
     private Camera mainCamera;
     private Plane groundPlane;
-    private bool isActionValid = false; // Thay thế cho canPlace cũ, dùng chung cho cả 2 chế độ
+    private bool isActionValid = false;
     private Vector3Int currentCellPosition;
 
-    // ĐỔI MỚI: Dùng Dictionary để quản lý chính xác GameObject của từng tháp theo tọa độ ô lưới
+    // Từ điển lưu Trạng thái Tháp
     private Dictionary<Vector3Int, GameObject> placedTowers = new Dictionary<Vector3Int, GameObject>();
+
+    // TỪ ĐIỂN MỚI: Nhớ giá tiền của tháp nằm trên ô đất đó để tính tiền hoàn trả
+    private Dictionary<Vector3Int, int> placedTowerCosts = new Dictionary<Vector3Int, int>();
 
     private Material originalMaterial;
     private bool isDisplayingSuccessEffect = false;
-    private bool isWaitingForConfirmation = false; // Công tắc đóng băng khi hiện bảng Hỏi xóa
-    private Vector3Int cellToTargetDelete;        // Lưu tạm ô đất đang được chọn để xóa
+    private bool isWaitingForConfirmation = false;
+    private Vector3Int cellToTargetDelete;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+    }
 
     void Start()
     {
@@ -50,12 +60,7 @@ public class TowerPlacementManager : MonoBehaviour
         groundPlane = new Plane(Vector3.up, Vector3.zero);
         if (availableTowers != null && availableTowers.Length > 0) towerToBuild = availableTowers[0];
 
-        if (indicatorRenderer != null)
-        {
-            originalMaterial = indicatorRenderer.material;
-        }
-
-        // Ẩn bảng xác nhận xóa khi vừa vào game
+        if (indicatorRenderer != null) originalMaterial = indicatorRenderer.material;
         if (confirmationPanel != null) confirmationPanel.SetActive(false);
     }
 
@@ -63,7 +68,6 @@ public class TowerPlacementManager : MonoBehaviour
     {
         if (Time.timeScale == 0f || isDisplayingSuccessEffect) return;
 
-        // Nếu đang hiện bảng UI hỏi xóa, ẩn khung ngắm đi và khóa chặt Update
         if (isWaitingForConfirmation)
         {
             if (indicatorRoot.activeSelf) indicatorRoot.SetActive(false);
@@ -79,17 +83,10 @@ public class TowerPlacementManager : MonoBehaviour
 
         MoveIndicatorAndValidatePosition();
 
-        // Nhấp chuột trái để hành động
         if (Input.GetMouseButtonDown(0) && isActionValid)
         {
-            if (currentMode == PlacementMode.Build)
-            {
-                BuildTower();
-            }
-            else if (currentMode == PlacementMode.Delete)
-            {
-                OpenConfirmationDialog();
-            }
+            if (currentMode == PlacementMode.Build) BuildTower();
+            else if (currentMode == PlacementMode.Delete) OpenConfirmationDialog();
         }
     }
 
@@ -115,13 +112,14 @@ public class TowerPlacementManager : MonoBehaviour
 
                 if (currentMode == PlacementMode.Build)
                 {
-                    // Chế độ xây: Chỉ hợp lệ khi KHÔNG dính đường VÀ CHƯA có tháp
-                    isActionValid = !isOverlappingRoad && !hasTower;
+                    int currentPrice = towerPrices[selectedTowerIndex];
+                    bool hasEnoughMoney = EconomyManager.Instance.currentMoney >= currentPrice;
+
+                    isActionValid = !isOverlappingRoad && !hasTower && hasEnoughMoney;
                     UpdateIndicatorStatus(isActionValid ? originalMaterial : invalidMaterial);
                 }
                 else if (currentMode == PlacementMode.Delete)
                 {
-                    // Chế độ xóa: Chỉ hợp lệ khi CHỈ ĐÚNG vào ô ĐANG CÓ THÁP
                     isActionValid = hasTower;
                     UpdateIndicatorStatus(isActionValid ? deleteMaterial : invalidMaterial);
                 }
@@ -133,6 +131,9 @@ public class TowerPlacementManager : MonoBehaviour
     {
         if (towerToBuild != null)
         {
+            int currentPrice = towerPrices[selectedTowerIndex];
+            EconomyManager.Instance.SpendMoney(currentPrice); // Trừ tiền
+
             GameObject newTower = Instantiate(towerToBuild, indicatorRoot.transform.position + Vector3.up * 0.15f, Quaternion.identity);
 
             if (buildSuccessPrefab != null)
@@ -142,62 +143,64 @@ public class TowerPlacementManager : MonoBehaviour
                 Destroy(successEffect, effectDuration);
             }
 
-            // Lưu tháp mới vào từ điển theo tọa độ ô đất của nó
             placedTowers.Add(currentCellPosition, newTower);
+
+            // Ghi nhớ giá trị của cái tháp này vào từ điển
+            placedTowerCosts.Add(currentCellPosition, currentPrice);
 
             StartCoroutine(SelectionToggleRoutine());
         }
     }
 
-    // --- LOGIC XỬ LÝ XÓA THÁP ---
-
     void OpenConfirmationDialog()
     {
-        cellToTargetDelete = currentCellPosition; // Ghi nhớ ô đất muốn xóa
-        isWaitingForConfirmation = true;          // Bật công tắc đóng băng
-        indicatorRoot.SetActive(false);           // Ẩn khung ngắm A đi
+        cellToTargetDelete = currentCellPosition;
+        isWaitingForConfirmation = true;
+        indicatorRoot.SetActive(false);
 
-        if (confirmationPanel != null) confirmationPanel.SetActive(true); // Hiện bảng UI hỏi Yes/No
+        if (confirmationPanel != null) confirmationPanel.SetActive(true);
     }
 
-    // Hàm này sẽ gắn vào nút "YES" trên giao diện UI
     public void ConfirmDeletion()
     {
         if (placedTowers.ContainsKey(cellToTargetDelete))
         {
-            // 1. Cho bốc hơi cục tháp thực tế trên Scene
+            // === LOGIC HOÀN TIỀN TẠI ĐÂY ===
+            if (placedTowerCosts.ContainsKey(cellToTargetDelete))
+            {
+                // Chia đôi giá trị gốc để ra số tiền hoàn trả (50%)
+                int refundAmount = placedTowerCosts[cellToTargetDelete] / 2;
+
+                // Gửi tiền về ngân hàng
+                EconomyManager.Instance.AddMoney(refundAmount);
+                Debug.Log($"<color=green><b>Đã bán tháp! Thu hồi vốn {refundAmount} Vàng.</b></color>");
+
+                // Xóa sổ ghi nợ
+                placedTowerCosts.Remove(cellToTargetDelete);
+            }
+
             Destroy(placedTowers[cellToTargetDelete]);
-
-            // 2. Xóa dữ liệu lưu trữ trong từ điển để ô đất đó trống trải trở lại
             placedTowers.Remove(cellToTargetDelete);
-
-            Debug.Log("<color=yellow><b>Đã xóa tháp thành công!</b></color>");
         }
 
         CloseConfirmationDialog();
     }
 
-    // Hàm này sẽ gắn vào nút "NO" trên giao diện UI
     public void CancelDeletion()
     {
-        Debug.Log("Đã hủy lệnh xóa tháp.");
         CloseConfirmationDialog();
     }
 
     void CloseConfirmationDialog()
     {
-        if (confirmationPanel != null) confirmationPanel.SetActive(false); // Ẩn bảng hỏi đi
-        isWaitingForConfirmation = false; // Mở băng hệ thống
+        if (confirmationPanel != null) confirmationPanel.SetActive(false);
+        isWaitingForConfirmation = false;
     }
 
-    // Hàm để các nút bấm UI chuyển đổi chế độ chơi (Xây dựng <-> Thùng rác)
     public void SetPlacementMode(bool isDeleteMode)
     {
         currentMode = isDeleteMode ? PlacementMode.Delete : PlacementMode.Build;
-        Debug.Log($"Chuyển sang chế độ: {currentMode}");
     }
-
-    // --------------------------------------------------
 
     IEnumerator SelectionToggleRoutine()
     {
@@ -227,16 +230,42 @@ public class TowerPlacementManager : MonoBehaviour
 
     void UpdateIndicatorStatus(Material mat)
     {
-        if (indicatorRenderer != null)
+        if (indicatorRenderer != null) indicatorRenderer.material = mat;
+    }
+
+    public void RemoveTowerFromGrid(GameObject towerobj)
+    {
+        Vector3Int keyToRemove = Vector3Int.zero;
+        bool found = false;
+
+        foreach (var kvp in placedTowers)
         {
-            indicatorRenderer.material = mat;
+            if (kvp.Value == towerobj)
+            {
+                keyToRemove = kvp.Key;
+                found = true;
+                break;
+            }
+        }
+        if (found)
+        {
+            placedTowers.Remove(keyToRemove);
+
+            // Xóa luôn dữ liệu giá tiền nếu tháp bị quái bắn nổ (Không hoàn tiền khi tháp chết)
+            if (placedTowerCosts.ContainsKey(keyToRemove))
+            {
+                placedTowerCosts.Remove(keyToRemove);
+            }
         }
     }
 
     public void SelectTowerToBuild(int towerIndex)
     {
-        // Khi chọn tháp mới để xây, tự động trả chế độ về Build Mode
         SetPlacementMode(false);
-        if (towerIndex >= 0 && towerIndex < availableTowers.Length) towerToBuild = availableTowers[towerIndex];
+        if (towerIndex >= 0 && towerIndex < availableTowers.Length)
+        {
+            towerToBuild = availableTowers[towerIndex];
+            selectedTowerIndex = towerIndex;
+        }
     }
 }
