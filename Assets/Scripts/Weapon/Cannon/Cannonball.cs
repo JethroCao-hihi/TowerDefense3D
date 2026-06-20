@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Cannonball : MonoBehaviour
 {
@@ -6,10 +6,20 @@ public class Cannonball : MonoBehaviour
     public float speed = 10f;
     public float damege = 25f;
 
+    // --- BIẾN NHỚ HỆ SỐ FUSE ---
+    private float currentDamageMultiplier = 1f;
+
     public void Seek(Transform _target)
     {
         target = _target;
     }
+
+    // --- LỖ TAI LẮNG NGHE THÁP TRUYỀN SỨC MẠNH ---
+    public void SetDamageMultiplier(float mult)
+    {
+        currentDamageMultiplier = mult;
+    }
+
     void Update()
     {
         if (target == null)
@@ -30,15 +40,16 @@ public class Cannonball : MonoBehaviour
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
         transform.LookAt(aimPoint);
     }
-    
+
     void HitTarget()
     {
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
         {
-            enemyHealth.TakeDamage(damege);
+            // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
+            enemyHealth.TakeDamage(damege * currentDamageMultiplier);
         }
-        
+
         Destroy(gameObject);
     }
 }

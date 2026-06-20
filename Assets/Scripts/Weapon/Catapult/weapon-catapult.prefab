@@ -100,6 +100,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3098188416024084760}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5166014820501643741}
   m_SourcePrefab: {fileID: 100100000, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
 --- !u!4 &465513761765367453 stripped
 Transform:
@@ -148,3 +151,18 @@ MonoBehaviour:
   firePoint: {fileID: 6307210259266639847}
   dualFirePoints: []
   enemyTag: Enemy
+--- !u!114 &-5166014820501643741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5723297255087200961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4814f1b6ee475db4e9cc3b107403d088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerStats
+  towerType: Cannon
+  towerLevel: 1
+  damageMultiplier: 1

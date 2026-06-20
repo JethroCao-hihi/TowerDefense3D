@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CatapultRock : MonoBehaviour
 {
@@ -6,6 +6,9 @@ public class CatapultRock : MonoBehaviour
     public float speed = 10f;
     public float areHeight = 3f;
     public float damege = 30f;
+
+    // --- BIẾN NHỚ HỆ SỐ FUSE ---
+    private float currentDamageMultiplier = 1f;
 
     private Vector3 startPos;
     private float progress = 0f;
@@ -17,6 +20,13 @@ public class CatapultRock : MonoBehaviour
         startPos = transform.position;
         totalDistance = Vector3.Distance(startPos, target.position);
     }
+
+    // --- LỖ TAI LẮNG NGHE THÁP TRUYỀN SỨC MẠNH ---
+    public void SetDamageMultiplier(float mult)
+    {
+        currentDamageMultiplier = mult;
+    }
+
     void Update()
     {
         if (target == null)
@@ -40,12 +50,14 @@ public class CatapultRock : MonoBehaviour
             HitTarget();
         }
     }
+
     void HitTarget()
     {
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
         {
-            enemyHealth.TakeDamage(damege);
+            // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
+            enemyHealth.TakeDamage(damege * currentDamageMultiplier);
         }
 
         Destroy(gameObject);
