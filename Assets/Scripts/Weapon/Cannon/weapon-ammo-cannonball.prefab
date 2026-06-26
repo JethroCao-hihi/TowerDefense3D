@@ -79,3 +79,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cannonball
   speed: 14
   damege: 25
+  explosionVFX: {fileID: 1627481999817236854, guid: 3dae93584bdc20e489e3b4508402171c, type: 3}

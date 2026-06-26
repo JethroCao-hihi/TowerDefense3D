@@ -23,6 +23,11 @@ public class EnemyHealth : MonoBehaviour
     private Color originalColor;
     private Coroutine currentHitAnimation;
 
+    public GameObject floatingTextPrefab; // Prefab cho chữ bay lên khi giết quái
+
+    [Header("Hiệu ứng Nổ khi chết (VFX)")]
+    public GameObject deathExplosionVFX; // <<=== 1. KHAI BÁO CỤC NỔ Ở ĐÂY
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -40,13 +45,14 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public void TakeDamage(float damageAmount)
     {
         // 1. Trừ máu
         currentHealth -= damageAmount;
 
         // 2. Cập nhật giao diện Thanh Máu
-        if (healthBarFill != null)
+        if (healthBarFill)
         {
             healthBarFill.fillAmount = currentHealth / maxHealth;
         }
@@ -65,19 +71,19 @@ public class EnemyHealth : MonoBehaviour
     // Hàm xử lý việc tráo Mesh trong 0.15 giây
     IEnumerator HitReactionRoutine()
     {
-        if (ufoMeshFilter != null && hitReactionMesh != null)
+        if (ufoMeshFilter && hitReactionMesh != null)
         {
             ufoMeshFilter.mesh = hitReactionMesh;
         }
 
-        if (enemyRenderer != null)
+        if (enemyRenderer)
         {
             enemyRenderer.material.color = Color.red;
         }
 
         yield return new WaitForSeconds(changeDuration);
 
-        if (ufoMeshFilter != null && normalMesh != null)
+        if (ufoMeshFilter && normalMesh != null)
         {
             ufoMeshFilter.mesh = normalMesh;
         }
@@ -94,10 +100,24 @@ public class EnemyHealth : MonoBehaviour
     {
         Debug.Log("💥 Enemy died!");
 
+        // <<=== 2. GỌI VỤ NỔ HOÀNH TRÁNG RA ĐÚNG CHỖ QUÁI CHẾT
+        if (deathExplosionVFX != null)
+        {
+            GameObject fx = Instantiate(deathExplosionVFX, transform.position, Quaternion.identity);
+            Destroy(fx, 2f); // Hủy vụ nổ sau 2 giây để không làm nặng game
+        }
+
         // GỌI NGÂN HÀNG CỘNG TIỀN
         if (EconomyManager.Instance != null)
         {
             EconomyManager.Instance.AddMoney(killReward);
+        }
+        
+        // Khởi tạo chữ bay lên tại vị trí quái chết
+        if (floatingTextPrefab != null)
+        {
+            GameObject floatText = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity);
+            floatText.GetComponent<FloatingText>().Setup("+" + killReward + "$", Color.yellow);
         }
 
         Destroy(gameObject);

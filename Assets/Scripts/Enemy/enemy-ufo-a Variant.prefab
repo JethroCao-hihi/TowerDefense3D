@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8543105770277212386}
   - component: {fileID: 3357343939835131482}
   - component: {fileID: 4171262810540442087}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: enemy-ufo-a Variant
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ NavMeshAgent:
   m_Height: 1.57
   m_BaseOffset: 0.92
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &5025480677622112064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,12 +195,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 100
+  killReward: 100
   healthBarFill: {fileID: 6735273557845444284}
   ufoMeshFilter: {fileID: 0}
   normalMesh: {fileID: -6788718970373949008, guid: 2bfdf0e035e21464bbad9fd85ddf417e, type: 3}
   hitReactionMesh: {fileID: -3651725676820390192, guid: 125c2e4d80dd16240b0f735883cc0658, type: 3}
   changeDuration: 0.15
   enemyRenderer: {fileID: 2086768382505592541}
+  floatingTextPrefab: {fileID: 2520463071547218955, guid: 4765c84cfdac0b34bbf21decbf0cd219, type: 3}
+  deathExplosionVFX: {fileID: 6813416509558619124, guid: 3b7f2c753d435d647a80f1f047a113e3, type: 3}
 --- !u!1 &1763616300778097849
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,7 +215,7 @@ GameObject:
   - component: {fileID: 1383254909545600515}
   - component: {fileID: 2638428335843629478}
   - component: {fileID: 250341060525960556}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: enemy-ufo-beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,7 +305,7 @@ GameObject:
   - component: {fileID: 7660248399541501366}
   - component: {fileID: 2960273813263752253}
   - component: {fileID: 5364070573649314929}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +381,7 @@ GameObject:
   - component: {fileID: 163180587440945684}
   - component: {fileID: 8456323061094504576}
   - component: {fileID: 6735273557845444284}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +458,7 @@ GameObject:
   - component: {fileID: 2423696429532170585}
   - component: {fileID: 70857123171629648}
   - component: {fileID: 7977970321391910816}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

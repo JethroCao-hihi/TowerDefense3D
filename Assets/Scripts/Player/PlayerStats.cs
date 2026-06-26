@@ -26,6 +26,7 @@ public class PlayerStats : MonoBehaviour
         UpdateLivesUI();
     }
 
+  
     public void LoseLife(int amount)
     {
         if (isGameOver) return;
@@ -51,8 +52,12 @@ public class PlayerStats : MonoBehaviour
 
     void GameOver()
     {
-        // === GẮN BƯỚC 2 VÀO ĐÂY ===
-        // Báo cáo cho bên WaveManager biết là người chơi đã thua để nó hiện UI "DEFEAT"
+        isGameOver = true;
+
+        if (GameEndManager.Instance != null)
+        {
+            GameEndManager.Instance.ShowLoseScreen();
+        }
         if (WaveManager.Instance != null)
         {
             WaveManager.Instance.GameLost();

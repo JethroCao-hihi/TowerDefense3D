@@ -6,7 +6,6 @@ public class Cannonball : MonoBehaviour
     public float speed = 10f;
     public float damege = 25f;
 
-    // --- BIẾN NHỚ HỆ SỐ FUSE ---
     private float currentDamageMultiplier = 1f;
 
     public void Seek(Transform _target)
@@ -46,7 +45,7 @@ public class Cannonball : MonoBehaviour
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
         {
-            // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
+            // --- CHỈ NHÂN SÁT THƯƠNG VÀ TRỪ MÁU, KHÔNG CÓ HIỆU ỨNG NỔ Ở ĐÂY NỮA ---
             enemyHealth.TakeDamage(damege * currentDamageMultiplier);
         }
 

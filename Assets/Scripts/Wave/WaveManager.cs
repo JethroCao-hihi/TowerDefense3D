@@ -170,6 +170,7 @@ public class WaveManager : MonoBehaviour
         // === KẾT THÚC GAME ===
         if (!isGameOver)
         {
+            if (GameEndManager.Instance  != null) GameEndManager.Instance.ShowLoseScreen();
             if (largeWaveText != null) largeWaveText.text = "VICTORY!";
             if (countdownText != null) countdownText.text = "BẠN ĐÃ PHÁ ĐẢO!";
             if (largeWaveNoticeParent != null) largeWaveNoticeParent.SetActive(true);
