@@ -4,7 +4,7 @@ public class Cannonball : MonoBehaviour
 {
     private Transform target;
     public float speed = 10f;
-    public float damege = 25f;
+    public float damege = 25f; // Giữ nguyên chữ "damege" để bạn không bị mất dữ liệu ngoài Inspector
 
     private float currentDamageMultiplier = 1f;
 
@@ -23,10 +23,15 @@ public class Cannonball : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject);
+            // ==========================================
+            // SỬA LỖI CHÍ MẠNG: THAY DESTROY THÀNH DESPAWN
+            // Khi mục tiêu biến mất giữa đường, viên đạn phải tự thu hồi về Pool
+            // ==========================================
+            SimplePool.Instance.Despawn(gameObject);
             return;
         }
-        Vector3 aimPoint = target.position + new Vector3(0f, 0f, 0f);
+
+        Vector3 aimPoint = target.position; // Rút gọn đoạn cộng Vector3(0,0,0) thừa cho nhẹ code
         Vector3 dir = target.position - transform.position;
         float distanceThisFrame = speed * Time.deltaTime;
 
@@ -42,13 +47,17 @@ public class Cannonball : MonoBehaviour
 
     void HitTarget()
     {
-        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
-        if (enemyHealth != null)
+        // Kiểm tra an toàn đề phòng quái biến mất ngay đúng khung hình chạm vào
+        if (target != null)
         {
-            // --- CHỈ NHÂN SÁT THƯƠNG VÀ TRỪ MÁU, KHÔNG CÓ HIỆU ỨNG NỔ Ở ĐÂY NỮA ---
-            enemyHealth.TakeDamage(damege * currentDamageMultiplier);
+            EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                // --- CHỈ NHÂN SÁT THƯƠNG VÀ TRỪ MÁU ---
+                enemyHealth.TakeDamage(damege * currentDamageMultiplier);
+            }
         }
 
-        Destroy(gameObject);
+        SimplePool.Instance.Despawn(gameObject);
     }
 }

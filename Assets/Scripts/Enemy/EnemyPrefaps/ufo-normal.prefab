@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3357343939835131482}
   - component: {fileID: 4171262810540442087}
   m_Layer: 11
-  m_Name: enemy-ufo-a Variant
+  m_Name: ufo-normal
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ca4f3eda39bda49aed446adac666f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  configData: {fileID: 11400000, guid: f5b8f454f81f2d64984ac5683eb73b4d, type: 2}
   maxHealth: 100
   killReward: 100
   healthBarFill: {fileID: 6735273557845444284}

@@ -2,31 +2,43 @@
 
 public class TowerStats : MonoBehaviour
 {
-    [Header("Dinh danh loai thap")]
-    public string towerType = "Cannon";
+    [Header("Bộ dữ liệu cấu hình sạch (ScriptableObject)")]
+    public TowerData configData; // Kéo file Scriptable Object vào đây ngoài Inspector
+
+    // Ẩn các biến này khỏi Inspector vì giờ game sẽ tự đọc từ file cấu hình sạch
+    [HideInInspector] public string towerType = "Cannon";
+    [HideInInspector] public float baseDamage = 25f;  
+    [HideInInspector] public float baseFireRate = 1f; 
 
     [Header("Chi so nang cap")]
     public int towerLevel = 1;
     public float damageMultiplier = 1f;
-    public float fireRateMultiplier = 1f; // Biến mới: Hệ số nhân tốc độ bắn
+    public float fireRateMultiplier = 1f; 
+    public float rangeMultiplier = 1f; 
 
-    [Header("Chỉ số Gốc")]
-    public float baseDamage = 25f;  // Sát thương mặc định (Bạn có thể sửa số này ngoài Inspector cho từng tháp)
-    public float baseFireRate = 1f; // Tốc độ bắn gốc (1 viên/giây)
-
-    private TowerStats stats;       // Biến để đọc dữ liệu nâng cấp
+    private void Awake()
+    {
+        // Tự động nạp chỉ số gốc từ file cấu hình Scriptable Object ngoài cửa sổ Project
+        if (configData != null)
+        {
+            towerType = configData.towerType;
+            baseDamage = configData.baseDamage;
+            baseFireRate = configData.baseFireRate;
+        }
+    }
 
     public void UpgradeTower()
     {
         towerLevel++;
 
-        // Cập nhật chỉ số sức mạnh
-        damageMultiplier += 0.5f;   // Tăng 50% sát thương gốc mỗi cấp
-        fireRateMultiplier += 0.2f; // Tăng 20% tốc độ bắn gốc mỗi cấp
+        // Giữ nguyên chỉ số cân bằng xuất sắc bạn vừa thiết lập
+        damageMultiplier += 1.2f;   // Tăng mạnh sát thương gốc mỗi cấp để không bị lỗ DPS khi ghép
+        fireRateMultiplier += 0.5f; // Tăng mạnh tốc độ bắn gốc mỗi cấp
+        rangeMultiplier += 0.2f;    // Tăng tầm xa mỗi cấp
 
-        // Tăng kích thước tháp mỗi cấp thêm 20%
+        // Tăng kích thước tháp mỗi cấp thêm 20% để tạo hiệu ứng thị giác tiến hóa
         transform.localScale *= 1.2f;
 
-        Debug.Log($"🎉 {towerType} đã tiến hóa lên CẤP {towerLevel}! Sát thương x{damageMultiplier}, Tốc bắn x{fireRateMultiplier}");
+        Debug.Log($"🎉 {towerType} tiến hóa CẤP {towerLevel}! Dame x{damageMultiplier}, Tốc x{fireRateMultiplier}, Tầm x{rangeMultiplier}");
     }
 }

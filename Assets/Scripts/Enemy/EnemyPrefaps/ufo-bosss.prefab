@@ -41,7 +41,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2523421614710595692, guid: a304c8b976adeee44a67d60d5f16b583, type: 3}
       propertyPath: m_Name
-      value: enemy-ufo-a-weapon Variant
+      value: ufo-bosss
       objectReference: {fileID: 0}
     - target: {fileID: 2523421614710595692, guid: a304c8b976adeee44a67d60d5f16b583, type: 3}
       propertyPath: m_Layer
@@ -188,6 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ca4f3eda39bda49aed446adac666f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  configData: {fileID: 11400000, guid: 5e4606ace8b63f94cb5dd977a26f46bd, type: 2}
   maxHealth: 2500
   killReward: 100
   healthBarFill: {fileID: 8789537230351493376}
@@ -264,7 +265,7 @@ MonoBehaviour:
   fireRate: 1
   partToRotate: {fileID: 3739771580898702268}
   firePoint: {fileID: 309824181887337488}
-  enemyBulletPrefab: {fileID: 5260153726548565895, guid: 75ae505f49f802044a2a95af161c158c, type: 3}
+  enemyBulletPrefab: {fileID: 998428308563521333, guid: 4d647daa7d973ce43a10d81e4fcb7aa6, type: 3}
 --- !u!4 &3319189414777276920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2904591112829041366, guid: a304c8b976adeee44a67d60d5f16b583, type: 3}

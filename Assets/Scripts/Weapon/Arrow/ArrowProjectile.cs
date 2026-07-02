@@ -4,7 +4,7 @@ public class ArrowProjectile : MonoBehaviour
 {
     private Transform target;
     public float speed = 15f;
-    public float damege = 20f;
+    public float damege = 20f; // Giữ nguyên chữ "damege" để tránh mất dữ liệu ngoài Inspector
 
     // --- BIẾN NHỚ HỆ SỐ FUSE ---
     private float currentDamageMultiplier = 1f;
@@ -24,7 +24,11 @@ public class ArrowProjectile : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject);
+            // ==========================================
+            // ĐÃ SỬA: Thay thế hoàn toàn Destroy thành Despawn
+            // Trả mũi tên về Pool nếu quái bị tiêu diệt giữa đường bay
+            // ==========================================
+            SimplePool.Instance.Despawn(gameObject);
             return;
         }
         Vector3 dir = target.position - transform.position;
@@ -41,13 +45,17 @@ public class ArrowProjectile : MonoBehaviour
 
     void HitTarget()
     {
-        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
-        if (enemyHealth != null)
+        // Bọc hàm kiểm tra an toàn phòng trường hợp mục tiêu biến mất ngay khung hình chạm
+        if (target != null)
         {
-            // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
-            enemyHealth.TakeDamage(damege * currentDamageMultiplier);
+            EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
+                enemyHealth.TakeDamage(damege * currentDamageMultiplier);
+            }
         }
 
-        Destroy(gameObject);
+        SimplePool.Instance.Despawn(gameObject);
     }
 }

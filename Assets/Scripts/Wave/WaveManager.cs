@@ -28,8 +28,8 @@ public class WaveManager : MonoBehaviour
 
     [Header("Cài đặt Bỏ Qua (Skip)")]
     [Tooltip("Số lượng quái còn sống ít nhất để nút Skip hiện ra (VD: 5)")]
-    public int skipThreshold = 5; // <<== ĐIỂM NÂNG CẤP LÀ ĐÂY: BẠN CÓ THỂ ĐỔI SỐ NÀY Ở NGOÀI INSPECTOR
-    public int skipBonusMoney = 300; // Tiền thưởng khi Skip
+    public int skipThreshold = 5; 
+    public int skipBonusMoney = 300; 
 
     [Header("Hệ thống Cổng Không gian")]
     public Transform[] spawnPoints;
@@ -117,7 +117,7 @@ public class WaveManager : MonoBehaviour
                     while (Time.timeScale == 0f) yield return null;
 
                     SpawnEnemy(group.enemyPrefab);
-                    yield return new WaitForSeconds(1f / group.spawnRate);
+                    yield return new WaitForSeconds(group.spawnRate);
                 }
             }
 
@@ -135,7 +135,7 @@ public class WaveManager : MonoBehaviour
 
                 if (aliveCount == 0) break;
 
-                // ÁP DỤNG BIẾN SKIP THRESHOLD Ở ĐÂY
+                // Cập nhật hiển thị UI
                 if (!isLastWave && aliveCount <= skipThreshold)
                 {
                     if (nextWaveButton != null && !nextWaveButton.activeSelf) nextWaveButton.SetActive(true);
@@ -148,7 +148,9 @@ public class WaveManager : MonoBehaviour
                 if (isSkipPressed) break;
 
                 if (countdownText != null) countdownText.text = $"Còn lại: {aliveCount} quái";
-                yield return null;
+                
+                // --- TỐI ƯU HIỆU NĂNG: Chỉ check số lượng quái 2 lần mỗi giây ---
+                yield return new WaitForSeconds(0.5f); 
             }
 
             if (isGameOver) yield break;
@@ -170,7 +172,9 @@ public class WaveManager : MonoBehaviour
         // === KẾT THÚC GAME ===
         if (!isGameOver)
         {
-            if (GameEndManager.Instance  != null) GameEndManager.Instance.ShowLoseScreen();
+            // --- SỬA LỖI LOGIC: Đổi thành ShowWinScreen ---
+            if (GameEndManager.Instance != null) GameEndManager.Instance.ShowWinScreen(); // Nhớ tạo hàm ShowWinScreen trong GameEndManager nhé!
+            
             if (largeWaveText != null) largeWaveText.text = "VICTORY!";
             if (countdownText != null) countdownText.text = "BẠN ĐÃ PHÁ ĐẢO!";
             if (largeWaveNoticeParent != null) largeWaveNoticeParent.SetActive(true);
@@ -182,7 +186,9 @@ public class WaveManager : MonoBehaviour
         if (spawnPoints.Length == 0 || endPoint == null) return;
         int randomIndex = Random.Range(0, spawnPoints.Length);
         Transform chosenSpawnPoint = spawnPoints[randomIndex];
-        GameObject enemy = Instantiate(enemyPrefab, chosenSpawnPoint.position, chosenSpawnPoint.rotation);
+        
+        // --- SỬA LỖI TỐI ƯU: Đưa quái về hệ thống SimplePool ---
+        GameObject enemy = SimplePool.Instance.Spawn(enemyPrefab, chosenSpawnPoint.position, chosenSpawnPoint.rotation);
 
         EnemyMovement moveScript = enemy.GetComponent<EnemyMovement>();
         if (moveScript != null) moveScript.SetTarget(endPoint);
@@ -201,7 +207,7 @@ public class WaveManager : MonoBehaviour
             isSkipPressed = true;
             if (EconomyManager.Instance != null)
             {
-                EconomyManager.Instance.AddMoney(skipBonusMoney); // Cộng tiền bằng biến mới
+                EconomyManager.Instance.AddMoney(skipBonusMoney); 
             }
         }
     }

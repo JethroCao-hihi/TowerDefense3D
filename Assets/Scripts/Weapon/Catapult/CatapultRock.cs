@@ -4,8 +4,8 @@ public class CatapultRock : MonoBehaviour
 {
     private Transform target;
     public float speed = 10f;
-    public float areHeight = 3f;
-    public float damege = 30f;
+    public float areHeight = 3f; // Giữ nguyên tên biến gốc của bạn để tránh mất dữ liệu Inspector
+    public float damege = 30f;   
 
     // --- BIẾN NHỚ HỆ SỐ FUSE ---
     private float currentDamageMultiplier = 1f;
@@ -19,6 +19,13 @@ public class CatapultRock : MonoBehaviour
         target = _target;
         startPos = transform.position;
         totalDistance = Vector3.Distance(startPos, target.position);
+
+        // ==========================================
+        // SỬA LỖI 1: BẮT BUỘC RESET PROGRESS VỀ 0
+        // Vì đạn lấy từ Pool ra sẽ giữ nguyên trạng thái cũ (progress = 1). 
+        // Nếu không reset, viên đá vừa đẻ ra sẽ tự kích hoạt HitTarget() ngay khung hình đầu tiên!
+        // ==========================================
+        progress = 0f; 
     }
 
     // --- LỖ TAI LẮNG NGHE THÁP TRUYỀN SỨC MẠNH ---
@@ -31,7 +38,13 @@ public class CatapultRock : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject); return;
+            // ==========================================
+            // SỬA LỖI 2: THAY DESTROY THÀNH DESPAWN
+            // Nếu con quái bị tháp khác bắn chết trước khi đá bay tới, 
+            // viên đá phải tự trả mình về Pool chứ không được tự hủy hoàn toàn.
+            // ==========================================
+            SimplePool.Instance.Despawn(gameObject); 
+            return;
         }
 
         float step = speed * Time.deltaTime;
@@ -53,13 +66,17 @@ public class CatapultRock : MonoBehaviour
 
     void HitTarget()
     {
-        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
-        if (enemyHealth != null)
+        // Kiểm tra lại một lần nữa phòng trường hợp mục tiêu biến mất đúng khung hình chạm
+        if (target != null)
         {
-            // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
-            enemyHealth.TakeDamage(damege * currentDamageMultiplier);
+            EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                // --- NHÂN SÁT THƯƠNG KHI TRÚNG QUÁI ---
+                enemyHealth.TakeDamage(damege * currentDamageMultiplier);
+            }
         }
 
-        Destroy(gameObject);
+        SimplePool.Instance.Despawn(gameObject);
     }
 }

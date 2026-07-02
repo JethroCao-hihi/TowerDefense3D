@@ -4,7 +4,7 @@ public class TowerShooting : MonoBehaviour
 {
     [Header("Pillar Index")]
     public float range = 3f;
-    public float fireRate = 0.15f;
+    public float fireRate = 0.15f; // Thời gian chờ giữa các lần bắn
     private float fireCountdown = 0f;
 
     [Header("Object Settings")]
@@ -22,6 +22,15 @@ public class TowerShooting : MonoBehaviour
     public string enemyTag = "Enemy";
     private Transform target;
 
+    // --- BIẾN KẾT NỐI VỚI HỆ THỐNG NÂNG CẤP ---
+    private TowerStats stats;
+
+    void Start()
+    {
+        // Lấy component TowerStats gắn trên cùng tòa tháp
+        stats = GetComponent<TowerStats>();
+    }
+
     void Update()
     {
         if (Time.timeScale == 0f) return;
@@ -37,7 +46,16 @@ public class TowerShooting : MonoBehaviour
         if (fireCountdown <= 0f)
         {
             Shoot();
-            fireCountdown = fireRate;
+            
+            // --- TÍNH TOÁN TỐC ĐỘ BẮN ĐÃ NÂNG CẤP ---
+            float actualFireRate = fireRate;
+            if (stats != null)
+            {
+                // Chia cho multiplier: Hệ số càng lớn -> thời gian chờ càng nhỏ -> Bắn càng nhanh
+                actualFireRate = fireRate / stats.fireRateMultiplier; 
+            }
+            
+            fireCountdown = actualFireRate;
         }
         fireCountdown -= Time.deltaTime;
     }
@@ -58,7 +76,15 @@ public class TowerShooting : MonoBehaviour
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= range)
+        // --- TÍNH TOÁN TẦM XA ĐÃ NÂNG CẤP ---
+        float actualRange = range;
+        if (stats != null)
+        {
+            actualRange = range * stats.rangeMultiplier;
+        }
+
+        // Dùng tầm xa mới để dò quái
+        if (nearestEnemy != null && shortestDistance <= actualRange)
         {
             target = nearestEnemy.transform;
         }
@@ -70,6 +96,12 @@ public class TowerShooting : MonoBehaviour
 
     void Shoot()
     {
+        // --- PHÁT ÂM THANH BẮN (Tự động nhận diện tên tháp) ---
+        if (AudioManager.Instance != null && stats != null)
+        {
+            AudioManager.Instance.PlayShoot(stats.towerType);
+        }
+
         Transform spawnPoint = firePoint;
         if (dualFirePoints != null && dualFirePoints.Length > 0)
         {
@@ -77,13 +109,33 @@ public class TowerShooting : MonoBehaviour
             currentFirePointIndex = (currentFirePointIndex + 1) % dualFirePoints.Length;
         }
 
-        GameObject bulletGO = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+        // ==========================================
+        // ĐÃ THAY THẾ: Gọi Đạn từ SimplePool thay vì Instantiate
+        // ==========================================
+        GameObject bulletGO = SimplePool.Instance.Spawn(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+        
+        // Truyền mục tiêu cho đạn bay tới
         bulletGO.SendMessage("Seek", target, SendMessageOptions.DontRequireReceiver);
+        
+        // --- TRUYỀN SỨC MẠNH (DAME) CHO VIÊN ĐẠN KHI VỪA ĐẺ RA ---
+        if (stats != null)
+        {
+            bulletGO.SendMessage("SetDamageMultiplier", stats.damageMultiplier, SendMessageOptions.DontRequireReceiver);
+        }
     }
 
     void OnDrawGizmosSelected()
     {
+        // Hiển thị vòng đỏ trong Scene để bạn dễ căn chỉnh thiết kế
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
+        float displayRange = range;
+        
+        TowerStats editorStats = GetComponent<TowerStats>();
+        if (editorStats != null)
+        {
+            displayRange = range * editorStats.rangeMultiplier;
+        }
+        
+        Gizmos.DrawWireSphere(transform.position, displayRange);
     }
 }

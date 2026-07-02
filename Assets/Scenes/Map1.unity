@@ -25019,7 +25019,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 589, y: 0}
+  m_AnchoredPosition: {x: 200, y: 0}
   m_SizeDelta: {x: 160, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &169378722
@@ -25129,7 +25129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShopButton
   towerPrefab: {fileID: 6107430500110304127, guid: cf5e041ae01ddfe45a95a628a670d847, type: 3}
-  towerCost: 1000
+  towerCost: 130
 --- !u!1001 &170614545
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59355,7 +59355,7 @@ GameObject:
   - component: {fileID: 408710205}
   - component: {fileID: 408710204}
   m_Layer: 5
-  m_Name: 200
+  m_Name: 70
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59400,7 +59400,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 200$
+  m_text: 70$
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -67496,7 +67496,7 @@ GameObject:
   - component: {fileID: 469247686}
   - component: {fileID: 469247685}
   m_Layer: 5
-  m_Name: 400
+  m_Name: 100
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67541,7 +67541,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 400$
+  m_text: 100$
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -72046,7 +72046,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -613, y: -7.3399}
+  m_AnchoredPosition: {x: -199, y: 0}
   m_SizeDelta: {x: 160, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &497996755
@@ -72156,7 +72156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShopButton
   towerPrefab: {fileID: 4628952389120062649, guid: a2782d9755994f3429c0760c95afada7, type: 3}
-  towerCost: 200
+  towerCost: 100
 --- !u!1 &498102788
 GameObject:
   m_ObjectHideFlags: 0
@@ -86823,7 +86823,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 200, y: 0}
+  m_AnchoredPosition: {x: 589, y: 0}
   m_SizeDelta: {x: 160, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &571454649
@@ -86933,7 +86933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShopButton
   towerPrefab: {fileID: 5723297255087200961, guid: 0a1895d049cbeb5418f00a18c35c06bc, type: 3}
-  towerCost: 700
+  towerCost: 180
 --- !u!1001 &571569995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -91096,7 +91096,7 @@ GameObject:
   - component: {fileID: 598595645}
   - component: {fileID: 598595644}
   m_Layer: 5
-  m_Name: 1000
+  m_Name: 180
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91141,7 +91141,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1000$
+  m_text: 180$
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -96082,7 +96082,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -199, y: 0}
+  m_AnchoredPosition: {x: -613, y: -7.3}
   m_SizeDelta: {x: 160, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &629430160
@@ -96192,7 +96192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShopButton
   towerPrefab: {fileID: 778597953597532802, guid: f3b8c3c4f5160fe498bcf16183019ad5, type: 3}
-  towerCost: 400
+  towerCost: 70
 --- !u!4 &629499722 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7340078699935202583, guid: fd2af21ae877e8a429d7abdd73c26903, type: 3}
@@ -141188,6 +141188,156 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9509af5eca3db364b9af9baa99ce3e5b, type: 3}
   m_PrefabInstance: {fileID: 779950529}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &925925079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 925925082}
+  - component: {fileID: 925925081}
+  - component: {fileID: 925925080}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &925925080
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925925079}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &925925081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925925079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e5f733700f47d1af4a30373304a190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  musicSource: {fileID: 0}
+  sfxSource: {fileID: 0}
+  backgroundMusic: {fileID: 0}
+  shootingSounds: []
+  buildSound: {fileID: 0}
+  errorSound: {fileID: 0}
+  winSound: {fileID: 0}
+  loseSound: {fileID: 0}
+--- !u!4 &925925082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925925079}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &926472651 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9509af5eca3db364b9af9baa99ce3e5b, type: 3}
@@ -174980,6 +175130,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd2af21ae877e8a429d7abdd73c26903, type: 3}
+--- !u!1 &1128834269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1128834271}
+  - component: {fileID: 1128834270}
+  m_Layer: 0
+  m_Name: SimplePoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1128834270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128834269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5ebf72999f49ee9837c7a522ec7009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimplePool
+--- !u!4 &1128834271
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128834269}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 642.4652, y: 550.12036, z: -61.39645}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1129684229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -195492,7 +195686,7 @@ GameObject:
   - component: {fileID: 1267278409}
   - component: {fileID: 1267278408}
   m_Layer: 5
-  m_Name: 700
+  m_Name: 130
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -195537,7 +195731,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 700$
+  m_text: 130$
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -225385,27 +225579,87 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
   waves:
-  - waveName: "M\u1EDF m\xE0n"
+  - waveName: Wave 1
     enemySubGroups:
-    - groupLabel: quaii bo
+    - groupLabel: ufo normal
       enemyPrefab: {fileID: 573448887452075784, guid: 54e99f6fb8ebc0d4d9e129c26fbfe933, type: 3}
-      enemyCount: 100
-      spawnRate: 1
-  - waveName: "T\u0103ng t\u1ED1c"
+      enemyCount: 8
+      spawnRate: 1.5
+  - waveName: Wave 2
     enemySubGroups:
-    - groupLabel: quai bo
+    - groupLabel: ufo normal
       enemyPrefab: {fileID: 573448887452075784, guid: 54e99f6fb8ebc0d4d9e129c26fbfe933, type: 3}
       enemyCount: 10
-      spawnRate: 2
-  - waveName: "T\u1ED5ng t\u1EA5n c\xF4ng"
+      spawnRate: 1.2
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1946735746729155447, guid: 1faa4f08d84ce31428899e730f229813, type: 3}
+      enemyCount: 4
+      spawnRate: 1.2
+  - waveName: Wave 3
     enemySubGroups:
-    - groupLabel: Boss
+    - groupLabel: ufo normal
+      enemyPrefab: {fileID: 573448887452075784, guid: 54e99f6fb8ebc0d4d9e129c26fbfe933, type: 3}
+      enemyCount: 15
+      spawnRate: 0.8
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1946735746729155447, guid: 1faa4f08d84ce31428899e730f229813, type: 3}
+      enemyCount: 2
+      spawnRate: 0.8
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 6117633802298281335, guid: a5c528c3dfc731d4bb5f7ab456587f7e, type: 3}
+      enemyCount: 2
+      spawnRate: 0.8
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 4645197879852838754, guid: b80f383b998dac841b2d04f5f0e85681, type: 3}
+      enemyCount: 2
+      spawnRate: 0.8
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 998428308563521333, guid: 4d647daa7d973ce43a10d81e4fcb7aa6, type: 3}
+      enemyCount: 2
+      spawnRate: 0.8
+  - waveName: Wave 4
+    enemySubGroups:
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 6117633802298281335, guid: a5c528c3dfc731d4bb5f7ab456587f7e, type: 3}
+      enemyCount: 5
+      spawnRate: 1
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 635773495958634162, guid: 4259381618eca73438ff09c63c807b67, type: 3}
+      enemyCount: 5
+      spawnRate: 1
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1946735746729155447, guid: 1faa4f08d84ce31428899e730f229813, type: 3}
+      enemyCount: 5
+      spawnRate: 1
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1853991154985140771, guid: 44c5e83d5982fbc4da12517e19024dcf, type: 3}
+      enemyCount: 5
+      spawnRate: 1
+  - waveName: Wave 4
+    enemySubGroups:
+    - groupLabel: ufo boss
       enemyPrefab: {fileID: 2692010748312884034, guid: be071dd4ac294dc4880ad807487158b8, type: 3}
       enemyCount: 1
-      spawnRate: 3
-  preparationTime: 30
-  skipThreshold: 5
-  skipBonusMoney: 300
+      spawnRate: 1.5
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 635773495958634162, guid: 4259381618eca73438ff09c63c807b67, type: 3}
+      enemyCount: 2
+      spawnRate: 1.5
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1946735746729155447, guid: 1faa4f08d84ce31428899e730f229813, type: 3}
+      enemyCount: 2
+      spawnRate: 1.5
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1853991154985140771, guid: 44c5e83d5982fbc4da12517e19024dcf, type: 3}
+      enemyCount: 2
+      spawnRate: 1.5
+    - groupLabel: ufo weapon
+      enemyPrefab: {fileID: 1853991154985140771, guid: 44c5e83d5982fbc4da12517e19024dcf, type: 3}
+      enemyCount: 2
+      spawnRate: 1.5
+  preparationTime: 12
+  skipThreshold: 3
+  skipBonusMoney: 50
   spawnPoints:
   - {fileID: 968947394}
   - {fileID: 255817934}
@@ -225428,7 +225682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd07e32653b9b34f97bf0a2b6e42940, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EconomyManager
-  startingMoney: 400
+  startingMoney: 300
   currentMoney: 0
   moneyText: {fileID: 38809322}
 --- !u!114 &1466993618
@@ -254222,7 +254476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1661051597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327969,3 +328223,5 @@ SceneRoots:
   - {fileID: 187232041}
   - {fileID: 397531198}
   - {fileID: 1661051600}
+  - {fileID: 925925082}
+  - {fileID: 1128834271}

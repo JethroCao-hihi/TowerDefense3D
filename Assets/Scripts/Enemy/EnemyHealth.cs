@@ -4,10 +4,14 @@ using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [Header("HP")]
-    public float maxHealth = 100f;
+    [Header("Bộ dữ liệu cấu hình sạch (ScriptableObject)")]
+    public EnemyData configData; // Kéo file dữ liệu quái (Data_Goblin, Data_Orc...) vào đây
+
+    // Ẩn các biến này khỏi Inspector vì bây giờ game sẽ tự động đọc dữ liệu từ file ScriptableObject
+    [HideInInspector] public float maxHealth = 100f;
+    [HideInInspector] public int killReward = 100; 
+    
     private float currentHealth;
-    public int killReward = 100; // Tiền thưởng khi giết con quái này
 
     [Header("Health Bar")]
     public Image healthBarFill;
@@ -26,11 +30,29 @@ public class EnemyHealth : MonoBehaviour
     public GameObject floatingTextPrefab; // Prefab cho chữ bay lên khi giết quái
 
     [Header("Hiệu ứng Nổ khi chết (VFX)")]
-    public GameObject deathExplosionVFX; // <<=== 1. KHAI BÁO CỤC NỔ Ở ĐÂY
+    public GameObject deathExplosionVFX; 
 
     void Start()
     {
+        // --- TỰ ĐỘNG NẠP CHỈ SỐ SẠCH TỪ SCRIPTABLE OBJECT ---
+        if (configData != null)
+        {
+            maxHealth = configData.maxHealth;
+            killReward = configData.goldReward;
+
+            // 💡 MẸO MỞ RỘNG: Nếu bạn có script quản lý di chuyển (VD: EnemyMovement hoặc AIPath),
+            // bạn có thể nạp luôn tốc độ chạy của quái tại đây ngoài hàm Start để quái đi chuẩn chỉ:
+            // var movement = GetComponent<EnemyMovement>();
+            // if (movement != null) movement.speed = configData.moveSpeed;
+        }
+
         currentHealth = maxHealth;
+
+        // Đảm bảo thanh máu đầy 100% khi quái vừa được sinh ra
+        if (healthBarFill)
+        {
+            healthBarFill.fillAmount = 1f;
+        }
 
         // Setup mặc định cho động cơ lúc đẻ ra
         if (ufoMeshFilter != null && normalMesh != null)
@@ -98,13 +120,15 @@ public class EnemyHealth : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("💥 Enemy died!");
+        // Hiển thị tên quái chính xác trong Console dựa theo file data
+        string deadEnemyName = configData != null ? configData.enemyName : "Enemy";
+        Debug.Log($"💥 {deadEnemyName} died!");
 
-        // <<=== 2. GỌI VỤ NỔ HOÀNH TRÁNG RA ĐÚNG CHỖ QUÁI CHẾT
+        // GỌI VỤ NỔ HOÀNH TRÁNG RA ĐÚNG CHỖ QUÁI CHẾT
         if (deathExplosionVFX != null)
         {
             GameObject fx = Instantiate(deathExplosionVFX, transform.position, Quaternion.identity);
-            Destroy(fx, 2f); // Hủy vụ nổ sau 2 giây để không làm nặng game
+            Destroy(fx, 2f); 
         }
 
         // GỌI NGÂN HÀNG CỘNG TIỀN
