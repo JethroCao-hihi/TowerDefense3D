@@ -1,7 +1,9 @@
 🛸 InfinityMaze - 3D Tower Defense Engine 🛡️
+
 "Defend in 3D space, destroy the Boss, protect the base!"
 📖 Overview
 InfinityMaze is an exciting 3D Tower Defense game where players must face continuous waves of UFO attacks. The project focuses on real-time strategic gameplay, smart economy management, and a unique Tower Fusion (Fuse) mechanic to upgrade power.
+
 🚀 Key Features
 
 5-Wave Attack System: Increasing intensity from the early stages to the final destructive Boss.
