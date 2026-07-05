@@ -2,19 +2,22 @@
 
 public class TowerShooting : MonoBehaviour
 {
-    [Header("Pillar Index")]
+    [Header("Chỉ số Tấn công")]
     public float range = 3f;
     public float fireRate = 0.15f; // Thời gian chờ giữa các lần bắn
     private float fireCountdown = 0f;
 
-    [Header("Object Settings")]
-    public Transform partToRotate;
+    [Header("Thiết lập Vật thể")]
+    public Transform partToRotate; // Phần xoay của tháp
     public GameObject bulletPrefab;
 
-    [Tooltip("For single-barrel towers")]
-    public Transform firePoint;
+    [Header("Muzzle Flash Settings")]
+    public GameObject muzzleFlashPrefab; // <--- KHÓI SÚNG / LÓE SÁNG
 
-    [Tooltip("For multi-barrel towers")]
+    [Tooltip("Dành cho tháp 1 nòng (VỊ TRÍ ĐẦU SÚNG/FIRE POINT)")]
+    public Transform firePoint; // <--- KÉO VẬT THỂ ĐẦU SÚNG VÀO ĐÂY
+
+    [Tooltip("Dành cho tháp nhiều nòng")]
     public Transform[] dualFirePoints;
     private int currentFirePointIndex = 0;
 
@@ -38,11 +41,13 @@ public class TowerShooting : MonoBehaviour
         UpdateTarget();
         if (target == null) return;
 
+        // Xoay tháp hướng về mục tiêu
         Vector3 dir = target.position - transform.position;
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         Vector3 rotation = lookRotation.eulerAngles;
         partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
 
+        // Bắn đạn theo thời gian đếm ngược
         if (fireCountdown <= 0f)
         {
             Shoot();
@@ -51,7 +56,6 @@ public class TowerShooting : MonoBehaviour
             float actualFireRate = fireRate;
             if (stats != null)
             {
-                // Chia cho multiplier: Hệ số càng lớn -> thời gian chờ càng nhỏ -> Bắn càng nhanh
                 actualFireRate = fireRate / stats.fireRateMultiplier; 
             }
             
@@ -96,13 +100,16 @@ public class TowerShooting : MonoBehaviour
 
     void Shoot()
     {
-        // --- PHÁT ÂM THANH BẮN (Tự động nhận diện tên tháp) ---
+        // --- PHÁT ÂM THANH BẮN (nếu có) ---
         if (AudioManager.Instance != null && stats != null)
         {
             AudioManager.Instance.PlayShoot(stats.towerType);
         }
 
+        // Xác định vị trí nòng súng sẽ bắn
         Transform spawnPoint = firePoint;
+        if (spawnPoint == null) spawnPoint = transform; // Đề phòng lỗi chưa kéo FirePoint
+
         if (dualFirePoints != null && dualFirePoints.Length > 0)
         {
             spawnPoint = dualFirePoints[currentFirePointIndex];
@@ -110,7 +117,25 @@ public class TowerShooting : MonoBehaviour
         }
 
         // ==========================================
-        // ĐÃ THAY THẾ: Gọi Đạn từ SimplePool thay vì Instantiate
+        // 1. SINH HIỆU ỨNG VFX TẠI ĐÚNG VỊ TRÍ ĐẦU SÚNG
+        // ==========================================
+        if (muzzleFlashPrefab != null)
+        {
+            // --- ĐÃ CHỈNH SỬA ĐỂ KHÓA TỌA ĐỘ VÀO ĐẦU SÚNG ---
+
+            // Spawn hiệu ứng làm con của spawnPoint (để đi theo nòng súng)
+            GameObject flash = Instantiate(muzzleFlashPrefab, spawnPoint);
+            
+            // ÉP BUỘC vị trí và góc quay địa phương (tương đối) khớp hoàn toàn với đầu nòng súng (tâm 0,0,0)
+            flash.transform.localPosition = Vector3.zero;
+            flash.transform.localRotation = Quaternion.identity;
+            
+            // Tự hủy sau một thời gian ngắn
+            Destroy(flash, 0.15f); 
+        }
+
+        // ==========================================
+        // 2. SINH ĐẠN TỪ POOL VÀ BẮN ĐI (đã tối ưu trước đó)
         // ==========================================
         GameObject bulletGO = SimplePool.Instance.Spawn(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
         
@@ -126,7 +151,7 @@ public class TowerShooting : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Hiển thị vòng đỏ trong Scene để bạn dễ căn chỉnh thiết kế
+        // Hiển thị vòng đỏ trong Scene để dễ căn chỉnh
         Gizmos.color = Color.red;
         float displayRange = range;
         

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 423672207743168658}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24,12 +24,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2314479696334869920}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.389, z: 0.244}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.021000028, z: 0.46220002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 109759960324681784}
+  m_Father: {fileID: 1476515664326274417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8309064447694237835
 GameObject:
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1623212943637700807}
   - component: {fileID: 8810997281852613811}
   - component: {fileID: 9014881296371240186}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RangeVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,9 +169,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3868710468543803471, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
       propertyPath: m_Name
       value: weapon-ballista
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
       propertyPath: m_TagString
@@ -185,10 +193,10 @@ PrefabInstance:
       addedObject: {fileID: 1623212943637700807}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 423672207743168658}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 9057147882042135122}
+    - targetCorrespondingSourceObject: {fileID: 1329380249762036386, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 423672207743168658}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 12ef429d8cb2ad64a8ebfc95b1cd62bf, type: 3}
       insertIndex: -1
@@ -250,6 +258,7 @@ MonoBehaviour:
   fireRate: 1
   partToRotate: {fileID: 1476515664326274417}
   bulletPrefab: {fileID: 7782998983317043449, guid: 8a580140232a33e4b9e6cf2eb11d54ab, type: 3}
+  muzzleFlashPrefab: {fileID: 985483039366664255, guid: f91edac4d13fc4343ba96bb6a843ad05, type: 3}
   firePoint: {fileID: 423672207743168658}
   dualFirePoints: []
   enemyTag: Enemy
@@ -430,9 +439,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 109759960324681784}
     m_Modifications:
+    - target: {fileID: 221709337444055539, guid: 07e33e84e0bfc9a4baf7377c2f55bff0, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 3691663809001033988, guid: 07e33e84e0bfc9a4baf7377c2f55bff0, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3691663809001033988, guid: 07e33e84e0bfc9a4baf7377c2f55bff0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6176440188525085031, guid: 07e33e84e0bfc9a4baf7377c2f55bff0, type: 3}
       propertyPath: m_Pivot.x
@@ -513,6 +530,10 @@ PrefabInstance:
     - target: {fileID: 6176440188525085031, guid: 07e33e84e0bfc9a4baf7377c2f55bff0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7678260798212994981, guid: 07e33e84e0bfc9a4baf7377c2f55bff0, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

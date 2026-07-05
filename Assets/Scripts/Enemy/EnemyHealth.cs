@@ -120,24 +120,34 @@ public class EnemyHealth : MonoBehaviour
 
     public void Die()
     {
-        // Hiển thị tên quái chính xác trong Console dựa theo file data
+        // Hiển thị tên quái chính xác trong Console
         string deadEnemyName = configData != null ? configData.enemyName : "Enemy";
         Debug.Log($"💥 {deadEnemyName} died!");
 
-        // GỌI VỤ NỔ HOÀNH TRÁNG RA ĐÚNG CHỖ QUÁI CHẾT
+        // 1. GỌI VỤ NỔ HOÀNH TRÁNG
         if (deathExplosionVFX != null)
         {
             GameObject fx = Instantiate(deathExplosionVFX, transform.position, Quaternion.identity);
             Destroy(fx, 2f); 
         }
 
-        // GỌI NGÂN HÀNG CỘNG TIỀN
+        // 2. RUNG MÀN HÌNH (CHỈ KHI LÀ BOSS)
+        // Đảm bảo con Boss ngoài Unity đã được gán Tag là "Boss"
+        if (gameObject.CompareTag("Boss"))
+        {
+            if (CameraShake.Instance != null)
+            {
+                CameraShake.Instance.Shake(0.3f, 0.15f);
+            }
+        }
+
+        // 3. GỌI NGÂN HÀNG CỘNG TIỀN
         if (EconomyManager.Instance != null)
         {
             EconomyManager.Instance.AddMoney(killReward);
         }
-        
-        // Khởi tạo chữ bay lên tại vị trí quái chết
+    
+        // 4. Khởi tạo chữ bay lên
         if (floatingTextPrefab != null)
         {
             GameObject floatText = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity);

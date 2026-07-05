@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7472897665284409325}
   - component: {fileID: 4180194548180017210}
   - component: {fileID: 1132623824931863978}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RangeVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6307210259266639847}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,12 +114,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4637042839973348806}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.368, z: -0.286}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.09654197, z: -0.3176942}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4910872113721671803}
+  m_Father: {fileID: 465513761765367453}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2878067086411326772
 PrefabInstance:
@@ -129,9 +129,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4910872113721671803}
     m_Modifications:
+    - target: {fileID: 221709337444055539, guid: 6849af9c5a52cfe4594016ec8245844f, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 3691663809001033988, guid: 6849af9c5a52cfe4594016ec8245844f, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3691663809001033988, guid: 6849af9c5a52cfe4594016ec8245844f, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6176440188525085031, guid: 6849af9c5a52cfe4594016ec8245844f, type: 3}
       propertyPath: m_Pivot.x
@@ -213,6 +221,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7678260798212994981, guid: 6849af9c5a52cfe4594016ec8245844f, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -287,8 +299,16 @@ PrefabInstance:
       value: weapon-catapult
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
       propertyPath: m_TagString
       value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 2829518461224114169, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -298,10 +318,10 @@ PrefabInstance:
       addedObject: {fileID: 7472897665284409325}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6307210259266639847}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8234811460110672979}
+    - targetCorrespondingSourceObject: {fileID: 5033198208762345741, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6307210259266639847}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de14d44b5185f504397f71b2942d2d2c, type: 3}
       insertIndex: -1
@@ -368,6 +388,7 @@ MonoBehaviour:
   fireRate: 2.5
   partToRotate: {fileID: 465513761765367453}
   bulletPrefab: {fileID: 2663528022458102659, guid: 9f31dbb16e29d0c48ad434b89bb80ef2, type: 3}
+  muzzleFlashPrefab: {fileID: 985483039366664255, guid: f91edac4d13fc4343ba96bb6a843ad05, type: 3}
   firePoint: {fileID: 6307210259266639847}
   dualFirePoints: []
   enemyTag: Enemy
