@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Data_UFO
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: UFO Normal
-  maxHealth: 100
+  maxHealth: 1
   moveSpeed: 2.2
   attackDamage: 0
   fireRate: 0

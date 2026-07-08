@@ -37,13 +37,10 @@ public class TowerPlacementManager : MonoBehaviour
     private bool isActionValid = false;
     private Vector3Int currentCellPosition;
     
-    // BIẾN LƯU THÁP BỊ NHẤC LÊN
     private GameObject draggedTowerModel;
     private Vector3 originalTowerPos;
 
     private Dictionary<Vector3Int, GameObject> placedTowers = new Dictionary<Vector3Int, GameObject>();
-    
-    // ĐÃ XÓA: placedTowerCosts (Bỏ lưu trữ tiền kiểu cũ, gây lạm phát giá khi ghép tháp)
 
     private Vector3Int firstFuseCell;
     private bool isDraggingForFuse = false;
@@ -88,7 +85,6 @@ public class TowerPlacementManager : MonoBehaviour
 
         MoveIndicatorAndValidatePosition();
 
-        // ĐÈ CHUỘT XUỐNG
         if (Input.GetMouseButtonDown(0))
         {
             if (currentMode == PlacementMode.Build)
@@ -100,7 +96,6 @@ public class TowerPlacementManager : MonoBehaviour
                     isActionValid = false; 
                     UpdateIndicatorStatus(fuseMaterial);
 
-                    // --- BẮT ĐẦU NHẤC THÁP LÊN ---
                     draggedTowerModel = placedTowers[firstFuseCell];
                     originalTowerPos = draggedTowerModel.transform.position; 
                 }
@@ -115,7 +110,6 @@ public class TowerPlacementManager : MonoBehaviour
             }
         }
 
-        // THẢ CHUỘT TRÁI RA
         if (Input.GetMouseButtonUp(0) && isDraggingForFuse)
         {
             isDraggingForFuse = false;
@@ -126,7 +120,6 @@ public class TowerPlacementManager : MonoBehaviour
             }
             else if (draggedTowerModel != null)
             {
-                // --- GHÉP XỊT: TRẢ THÁP VỀ CHỖ CŨ ---
                 draggedTowerModel.transform.position = originalTowerPos;
             }
 
@@ -134,7 +127,6 @@ public class TowerPlacementManager : MonoBehaviour
             MoveIndicatorAndValidatePosition();
         }
 
-        // CLICK CHUỘT PHẢI ĐỂ HỦY CHỌN THÁP 
         if (Input.GetMouseButtonDown(1))
         {
             towerToBuild = null; 
@@ -226,14 +218,73 @@ public class TowerPlacementManager : MonoBehaviour
 
     void ExecuteDragAndDropFuse()
     {
-        GameObject tower1 = placedTowers[firstFuseCell];
-        GameObject tower2 = placedTowers[currentCellPosition];
+        GameObject tower1 = placedTowers[firstFuseCell]; 
+        GameObject tower2 = placedTowers[currentCellPosition]; 
 
+        TowerStats stats1 = tower1.GetComponent<TowerStats>();
         TowerStats stats2 = tower2.GetComponent<TowerStats>();
+        TowerHealth health1 = tower1.GetComponent<TowerHealth>();
+        TowerHealth health2 = tower2.GetComponent<TowerHealth>();
+
         if (stats2 != null)
         {
+            // 1. XỬ LÝ ĐỒNG BỘ MÁU TRƯỚC KHI UPDATE LEVEL
+            if (health1 != null && health2 != null)
+            {
+                if (health1.currentHealth > health2.currentHealth)
+                {
+                    if (health1.currentHealth >= health1.maxHealth)
+                    {
+                        float targetHpPercent = (health2.currentHealth / health2.maxHealth) * 100f;
+
+                        if (targetHpPercent >= 100f)
+                        {
+                            health2.currentHealth = health2.maxHealth;
+                        }
+                        else if (targetHpPercent >= 75f)
+                        {
+                            health2.currentHealth = health2.maxHealth;
+                            Debug.Log("[Fuse Health] Tháp ít máu >= 75% -> Hồi phục nguyên máu!");
+                        }
+                        else if (targetHpPercent >= 50f)
+                        {
+                            health2.currentHealth += (health2.maxHealth * 0.25f);
+                            Debug.Log("[Fuse Health] Tháp ít máu từ 50%-75% -> Nhận thêm 25% máu!");
+                        }
+                        else if (targetHpPercent >= 20f)
+                        {
+                            health2.currentHealth += (health2.maxHealth * 0.75f);
+                            Debug.Log("[Fuse Health] Tháp ít máu từ 20%-50% -> Nhận thêm 75% máu!");
+                        }
+                        else
+                        {
+                            health2.currentHealth += (health2.maxHealth * 0.75f);
+                            Debug.Log("[Fuse Health] Tháp ít máu < 20% -> Nhận thêm 75% máu!");
+                        }
+                    }
+                    else
+                    {
+                        health2.currentHealth += (health1.currentHealth * 0.75f);
+                        Debug.Log("[Fuse Health] Tháp nguyên liệu chưa đầy -> Tháp đích nhận thêm 75% máu của nó!");
+                    }
+                }
+                else
+                {
+                    Debug.Log("[Fuse Health] Tháp nguyên liệu ít máu hơn tháp đích -> Giữ nguyên máu tháp đích!");
+                }
+
+                health2.currentHealth = Mathf.Clamp(health2.currentHealth, 0f, health2.maxHealth);
+            }
+
+            // 2. TIẾN HÀNH THĂNG CẤP CHO THÁP ĐÍCH
             stats2.UpgradeTower();
-            // ĐÃ XÓA DÒNG CỘNG TIỀN DỒN GÂY LỖI: placedTowerCosts[currentCellPosition] += placedTowerCosts[firstFuseCell];
+
+            // ⚡ ĐỒNG BỘ UI MỚI: Ép tháp giữ lại phải vẽ lại thanh máu xanh lá sau khi nhận thuật toán bổ sung máu
+            if (health2 != null)
+            {
+                // Gọi hàm xử lý fillAmount có sẵn trong TowerHealth tự lập để UI co dãn chuẩn chỉ
+                health2.SendMessage("UpdateTowerHealthBar", SendMessageOptions.DontRequireReceiver);
+            }
 
             if (buildSuccessPrefab != null)
             {
@@ -241,6 +292,7 @@ public class TowerPlacementManager : MonoBehaviour
                 Destroy(successEffect, effectDuration);
             }
 
+            // 3. XÓA BỎ THÁP NGUYÊN LIỆU RA KHỎI ĐIỆN TOÁN
             Destroy(tower1);
             placedTowers.Remove(firstFuseCell);
         }
@@ -254,6 +306,11 @@ public class TowerPlacementManager : MonoBehaviour
 
             GameObject newTower = Instantiate(towerToBuild, indicatorRoot.transform.position + Vector3.up * 0.15f, Quaternion.identity);
 
+            // --- KHU VỰC KIỂM TRA ÂM THANH ĐẶT THÁP ---
+            if (SoundManager.Instance != null) {
+                SoundManager.Instance.PlayUI("Build"); // Ô uiSounds đặt tên là Build
+            }
+
             if (buildSuccessPrefab != null)
             {
                 Vector3 effectPos = indicatorRoot.transform.position + Vector3.up * 0.1f;
@@ -262,8 +319,6 @@ public class TowerPlacementManager : MonoBehaviour
             }
 
             placedTowers.Add(currentCellPosition, newTower);
-            
-            // ĐÃ XÓA DÒNG LƯU TIỀN VÀO TỪ ĐIỂN CŨ
 
             StartCoroutine(SelectionToggleRoutine());
         }
@@ -273,7 +328,7 @@ public class TowerPlacementManager : MonoBehaviour
     {
         currentMode = PlacementMode.Build;
         towerToBuild = prefab;
-        currentSelectedTowerCost = cost; // Biến này vẫn giữ để kiểm tra tiền lúc MUA tháp
+        currentSelectedTowerCost = cost; 
     }
 
     void OpenConfirmationDialog()
@@ -284,10 +339,6 @@ public class TowerPlacementManager : MonoBehaviour
         if (confirmationPanel != null) confirmationPanel.SetActive(true);
     }
 
-    // ==============================================
-    // TRÁI TIM CỦA BẢN UPDATE NẰM Ở HÀM NÀY
-    // Đọc trực tiếp Data từ tháp bị xóa
-    // ==============================================
     public void ConfirmDeletion()
     {
         if (placedTowers.ContainsKey(cellToTargetDelete))
@@ -295,10 +346,8 @@ public class TowerPlacementManager : MonoBehaviour
             GameObject towerToDelete = placedTowers[cellToTargetDelete];
             TowerStats stats = towerToDelete.GetComponent<TowerStats>();
 
-            // Nếu tháp có mang ScriptableObject Data, tính tiền theo Data
             if (stats != null && stats.configData != null)
             {
-                // Công thức: (Giá gốc x Cấp độ) / 2
                 int refundAmount = (stats.configData.baseCost * stats.towerLevel) / 2;
                 EconomyManager.Instance.AddMoney(refundAmount);
                 

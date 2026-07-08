@@ -3,68 +3,74 @@ using UnityEngine.UI;
 
 public class TowerHealth : MonoBehaviour
 {
-    [Header("Dữ liệu cấu hình tháp")]
-    public TowerStats towerStats; // Script đang chứa file Data của tháp
+    [Header("--- Chỉ số Máu Tháp ---")]
+    public float maxHealth = 100f;
+    public float currentHealth;
 
-    [Header("Hiệu ứng nổ tháp (VFX")] 
-    public GameObject destructionVFX;
-    
-    private float currentHealth;
-    public Image healthBarFill;
+    [Header("--- Giao diện Thanh Máu (UI) ---")]
+    public Image healthBarFill; 
+
+    [HideInInspector] public bool isTakingDamage = false; 
 
     void Start()
     {
-        // Đọc máu từ file Data thông qua TowerStats
-        if (towerStats != null && towerStats.configData != null)
-        {
-            currentHealth = towerStats.configData.maxHealth;
-            
-            // Nếu tháp đã được ghép lên cấp, máu cũng phải trâu hơn! (Cấp 2 x 1.5 máu, Cấp 3 x 2.0 máu...)
-            currentHealth *= (1f + (towerStats.towerLevel - 1) * 0.5f);
-        }
-
-        UpdateHealthBar();
+        currentHealth = maxHealth;
+        UpdateTowerHealthBar();
     }
 
-    public void TakeDamage(float amount)
+    public void FuseFrom(TowerHealth otherTower)
     {
-        currentHealth -= amount;
-        UpdateHealthBar();
+        if (otherTower == null) return;
 
-        if (currentHealth <= 0)
+        float currentHealthPercent = (this.currentHealth / this.maxHealth) * 100f;
+
+        if (otherTower.currentHealth > this.currentHealth)
         {
-            Die();
+            if (otherTower.currentHealth >= otherTower.maxHealth)
+            {
+                if (currentHealthPercent >= 100f) this.currentHealth = this.maxHealth;
+                else if (currentHealthPercent >= 75f) this.currentHealth = this.maxHealth;
+                else if (currentHealthPercent >= 50f) this.currentHealth += (this.maxHealth * 0.25f);
+                else if (currentHealthPercent >= 20f) this.currentHealth += (this.maxHealth * 0.75f);
+                else this.currentHealth += (this.maxHealth * 0.75f);
+            }
+            else
+            {
+                this.currentHealth += (otherTower.currentHealth * 0.75f);
+            }
         }
-    }
-
-    void UpdateHealthBar()
-    {
-        if (healthBarFill != null && towerStats != null && towerStats.configData != null)
-        {
-            float maxHp = towerStats.configData.maxHealth * (1f + (towerStats.towerLevel - 1) * 0.5f);
-            healthBarFill.fillAmount = currentHealth / maxHp;
-        }
-    }
-
-    void Die()
-    {
-        Debug.Log($"💥 Tháp {gameObject.name} đã bị phá hủy!");
         
-        // <<== 2. GỌI HIỆU ỨNG NỔ RA TRƯỚC KHI THÁP BIẾN MẤT
-        if (destructionVFX != null)
-        {
-            // Đẻ cục VFX ra ngay tại vị trí của tháp
-            GameObject fx = Instantiate(destructionVFX, transform.position, Quaternion.identity);
-            
-            // Hủy cục VFX sau 2 giây để dọn rác bộ nhớ
-            Destroy(fx, 2f); 
-        }
+        this.currentHealth = Mathf.Clamp(this.currentHealth, 0f, this.maxHealth);
+        UpdateTowerHealthBar();
+    }
 
+    public void TakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+        if (currentHealth < 0f) currentHealth = 0f;
+
+        UpdateTowerHealthBar();
+
+        if (currentHealth <= 0f)
+        {
+            DestroyTower();
+        }
+    }
+
+    private void UpdateTowerHealthBar()
+    {
+        if (healthBarFill != null)
+        {
+            healthBarFill.fillAmount = currentHealth / maxHealth;
+        }
+    }
+
+    private void DestroyTower()
+    {
         if (TowerPlacementManager.Instance != null)
         {
             TowerPlacementManager.Instance.RemoveTowerFromGrid(gameObject);
         }
-
         Destroy(gameObject);
     }
 }

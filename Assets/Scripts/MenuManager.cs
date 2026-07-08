@@ -1,30 +1,86 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro; // BẮT BUỘC để điều khiển TextMeshPro
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("Menu Panels")]
-    [Tooltip("Kéo cục OptionMenu vào đây")]
-    public GameObject optionMenuPanel;
+    public static MenuManager Instance;
 
-    [Tooltip("Kéo cục PauseMenu vào đây")]
+    [Header("--- Menu Panels ---")] 
+    public GameObject optionMenuPanel;
     public GameObject pauseMenuPanel;
 
+    [Header("--- New Demo Panels (Nộp Đồ Án) ---")]
+    public GameObject winPanel;
+    public GameObject losePanel;
+
+    [Header("--- Victory Text Setup ---")] 
+    public TMP_Text scoreNumberText;
+    public TMP_Text coinNumberText;
+
+    [Header("--- Game Over Text Setup ---")]
+    public TMP_Text loseScoreNumberText;
+
+    [Header("--- Game Stats ---")] 
+    public int currentScore = 0;
+    public int currentCoins = 0;
+
+    [Header("--- Settings Game (Hệ thống Button ON/OFF) ---")] 
+    [Tooltip("Kéo Object nút SOUND_ON vào đây")]
+    public GameObject soundOnButton;
+
+    [Tooltip("Kéo Object nút SOUND_OFF vào đây")]
+    public GameObject soundOffButton;
+
+    [Tooltip("Kéo Object nút MUSIC_ON vào đây")]
+    public GameObject musicOnButton;
+
+    [Tooltip("Kéo Object nút MUSIC_OFF vào đây")]
+    public GameObject musicOffButton;
+
+    private bool isSoundOn = true;
+    private bool isMusicOn = true;
     private bool isPaused = false;
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+    }
 
     void Start()
     {
-        // Khi vừa vào Menu, đảm bảo các bảng phụ phải được ẩn đi
         if (optionMenuPanel != null) optionMenuPanel.SetActive(false);
         if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
+        if (winPanel != null) winPanel.SetActive(false);
+        if (losePanel != null) losePanel.SetActive(false);
 
-        // Đảm bảo thời gian game trôi bình thường
+        // Khởi tạo trạng thái hiển thị ban đầu cho các nút ON/OFF
+        UpdateSettingsUI();
+
         Time.timeScale = 1f;
+
+        // =========================================================================
+        // TỰ ĐỘNG ĐỔI BÀI NHẠC THÔNG MINH CHO TỪNG SCENE
+        // =========================================================================
+        if (SoundManager.Instance != null)
+        {
+            string currentSceneName = SceneManager.GetActiveScene().name;
+
+            // Nếu đang ở màn hình chính ngoài sảnh
+            if (currentSceneName == "Menu")
+            {
+                SoundManager.Instance.PlayMusic("Menu"); 
+            }
+            // Nếu ở bất kỳ màn nào khác (màn chơi, map test, đồ án...), tự động bật nhạc chiến đấu
+            else
+            {
+                SoundManager.Instance.PlayMusic("InGame"); 
+            }
+        }
     }
 
     void Update()
     {
-        // Tính năng mở rộng: Bấm phím ESC để bật/tắt Pause Menu khi đang chơi
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused) ResumeGame();
@@ -32,69 +88,124 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    // ==========================================
-    // CÁC HÀM CHO MAIN MENU CHÍNH
-    // ==========================================
-
-    public void PlayGame()
+    public void AddScoreAndCoins(int scoreToAdd, int coinsToAdd)
     {
-        // LƯU Ý: Đổi chữ "GameScene" thành ĐÚNG TÊN scene chơi game của bạn
-        SceneManager.LoadScene("Map1");
-    }
-
-    public void OpenSettings()
-    {
-        optionMenuPanel.SetActive(true);
-    }
-
-    public void QuitGame()
-    {
-        Debug.Log("Đã thoát game! (Sẽ chỉ hoạt động khi build ra file .exe hoặc .apk)");
-        Application.Quit();
+        currentScore += scoreToAdd;
+        currentCoins += coinsToAdd;
     }
 
     // ==========================================
-    // CÁC HÀM CHO OPTION MENU (CÀI ĐẶT)
+    // LOGIC ĐIỀU KHIỂN NÚT BUTTON ON/OFF ĐỘC LẬP
     // ==========================================
 
-    public void CloseSettings() // Hàm này gắn vào nút QuitMenu
+    public void ToggleSound()
     {
-        optionMenuPanel.SetActive(false);
+        isSoundOn = !isSoundOn; 
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.ToggleSFX();
+        }
+
+        UpdateSettingsUI(); 
+        Debug.Log("Sound SFX: " + (isSoundOn ? "BẬT" : "TẮT"));
     }
 
-    // Bạn có thể tự code thêm hàm chỉnh Âm thanh ở đây cho thanh Slider Music/SFX
+    public void ToggleMusic()
+    {
+        isMusicOn = !isMusicOn; 
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.ToggleMusic();
+        }
+
+        UpdateSettingsUI(); 
+        Debug.Log("Nhạc nền Music: " + (isMusicOn ? "BẬT" : "TẮT"));
+    }
+
+    private void UpdateSettingsUI()
+    {
+        if (soundOnButton != null) soundOnButton.SetActive(isSoundOn);
+        if (soundOffButton != null) soundOffButton.SetActive(!isSoundOn);
+
+        if (musicOnButton != null) musicOnButton.SetActive(isMusicOn);
+        if (musicOffButton != null) musicOffButton.SetActive(!isMusicOn);
+    }
 
     // ==========================================
-    // CÁC HÀM CHO PAUSE MENU (KHI ĐANG CHƠI)
+    // CÁC HÀM ĐIỀU HƯỚNG VÀ KẾT THÚC GAME
     // ==========================================
+    public void TriggerGameOver()
+    {
+        if (losePanel == null) return;
+        losePanel.SetActive(true);
+        Time.timeScale = 0f;
+
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayUI("Lose");
+
+        if (loseScoreNumberText != null) loseScoreNumberText.text = currentScore.ToString("N0");
+    }
+
+    public void TriggerGameWin()
+    {
+        if (winPanel == null) return;
+        winPanel.SetActive(true);
+        Time.timeScale = 0f;
+
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayUI("Win");
+
+        if (scoreNumberText != null) scoreNumberText.text = currentScore.ToString("N0");
+        if (coinNumberText != null) coinNumberText.text = currentCoins.ToString("N0");
+    }
 
     public void PauseGame()
     {
         if (pauseMenuPanel == null) return;
         pauseMenuPanel.SetActive(true);
-        Time.timeScale = 0f; // Đóng băng mọi hoạt động trong game
+        Time.timeScale = 0f;
         isPaused = true;
     }
 
-    public void ResumeGame() // Hàm này gắn vào nút Play trong PauseMenu
+    public void ResumeGame()
     {
         if (pauseMenuPanel == null) return;
         pauseMenuPanel.SetActive(false);
-        Time.timeScale = 1f; // Rã đông game
+        Time.timeScale = 1f;
         isPaused = false;
     }
 
-    public void RestartGame() // Hàm này gắn vào nút Again trong PauseMenu
+    public void RestartGame()
     {
         Time.timeScale = 1f;
-        // Tự động load lại scene hiện tại đang chơi
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void BackToMainMenu() // Hàm này gắn vào nút Quit trong PauseMenu
+    public void OpenSettings()
+    {
+        if (optionMenuPanel == null) return;
+        optionMenuPanel.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        if (optionMenuPanel == null) return;
+        optionMenuPanel.SetActive(false);
+    }
+
+    public void BackToMainMenu()
     {
         Time.timeScale = 1f;
-        // LƯU Ý: Đổi chữ "Menu" thành ĐÚNG TÊN scene Menu của bạn
         SceneManager.LoadScene("Menu");
+    }
+
+    public void PlayGame()
+    {
+        SceneManager.LoadScene("Map1");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

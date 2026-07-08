@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Data_UFO_Boss
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: UFO Normal
-  maxHealth: 2500
+  maxHealth: 1
   moveSpeed: 0.8
-  attackDamage: 80
+  attackDamage: 1
   fireRate: 1.2
   attackRange: 4
   goldReward: 300

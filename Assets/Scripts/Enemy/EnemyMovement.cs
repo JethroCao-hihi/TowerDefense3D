@@ -17,13 +17,20 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        if (agent == null || !agent.isActiveAndEnabled) return;
+
         if (Time.timeScale == 0f)
         {
-            if (agent != null && agent.isActiveAndEnabled)
+            agent.isStopped = true; // Game đang tạm dừng -> Đứng im
+        }
+        else
+        {
+            // Khi game đang chạy bình thường (Time.timeScale == 1f)
+            // và AI đang bị bắt dừng trước đó -> Cho phép chạy tiếp
+            if (agent.isStopped) 
             {
-                agent.isStopped = true;
+                agent.isStopped = false; 
             }
-            return;
         }
     }
 

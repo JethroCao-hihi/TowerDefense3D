@@ -10,6 +10,7 @@ public class EnemyHealth : MonoBehaviour
     // Ẩn các biến này khỏi Inspector vì bây giờ game sẽ tự động đọc dữ liệu từ file ScriptableObject
     [HideInInspector] public float maxHealth = 100f;
     [HideInInspector] public int killReward = 100; 
+    [HideInInspector] public int scoreReward = 500; // Thêm biến ẩn lưu điểm thưởng đọc từ ScriptableObject
     
     private float currentHealth;
 
@@ -39,6 +40,12 @@ public class EnemyHealth : MonoBehaviour
         {
             maxHealth = configData.maxHealth;
             killReward = configData.goldReward;
+            
+            // 💡 LƯU Ý ĐỒ ÁN: Nếu file EnemyData của bạn chưa có biến scoreReward, 
+            // dòng dưới đây tạm thời sẽ lấy mặc định là 500 điểm cho quái thường, 2000 điểm cho Boss.
+            // Sau này bạn có thể vào script EnemyData thêm: public int scoreReward; rồi sài: scoreReward = configData.scoreReward;
+            if (gameObject.CompareTag("Boss")) scoreReward = 2000;
+            else scoreReward = 500;
 
             // 💡 MẸO MỞ RỘNG: Nếu bạn có script quản lý di chuyển (VD: EnemyMovement hoặc AIPath),
             // bạn có thể nạp luôn tốc độ chạy của quái tại đây ngoài hàm Start để quái đi chuẩn chỉ:
@@ -133,18 +140,27 @@ public class EnemyHealth : MonoBehaviour
 
         // 2. RUNG MÀN HÌNH (CHỈ KHI LÀ BOSS)
         // Đảm bảo con Boss ngoài Unity đã được gán Tag là "Boss"
-        if (gameObject.CompareTag("Boss"))
+        /*if (gameObject.CompareTag("Boss"))
         {
             if (CameraShake.Instance != null)
             {
                 CameraShake.Instance.Shake(0.3f, 0.15f);
             }
-        }
+        }*/
 
         // 3. GỌI NGÂN HÀNG CỘNG TIỀN
         if (EconomyManager.Instance != null)
         {
             EconomyManager.Instance.AddMoney(killReward);
+        }
+
+        // =========================================================
+        // TRANG BỊ MỚI: CỘNG ĐIỂM VÀ TIỀN VÀO HỆ THỐNG MENU MANAGER
+        // =========================================================
+        if (MenuManager.Instance != null)
+        {
+            // Tự động đẩy điểm (scoreReward) và tiền (killReward) thực tế của con quái này vào MenuManager
+            MenuManager.Instance.AddScoreAndCoins(scoreReward, killReward);
         }
     
         // 4. Khởi tạo chữ bay lên

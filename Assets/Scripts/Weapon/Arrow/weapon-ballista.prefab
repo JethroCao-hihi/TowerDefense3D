@@ -239,9 +239,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd2739a6aa5e4e4c8013ff9ee5ced86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerHealth
-  towerStats: {fileID: 3385174767723734005}
-  destructionVFX: {fileID: 104829970813648393, guid: d3015b7eea383f64d8b81f965cc466e7, type: 3}
+  maxHealth: 100
+  currentHealth: 0
   healthBarFill: {fileID: 3714666120490746209}
+  isTakingDamage: 0
 --- !u!114 &3585013278175800999
 MonoBehaviour:
   m_ObjectHideFlags: 0
