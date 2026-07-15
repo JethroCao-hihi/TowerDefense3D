@@ -43,7 +43,7 @@ public class TowerPlacementManager : MonoBehaviour
     private Dictionary<Vector3Int, GameObject> placedTowers = new Dictionary<Vector3Int, GameObject>();
 
     private Vector3Int firstFuseCell;
-    private bool isDraggingForFuse = false;
+    public bool isDraggingForFuse = false;
 
     private Material originalMaterial;
     private bool isDisplayingSuccessEffect = false;
@@ -77,15 +77,35 @@ public class TowerPlacementManager : MonoBehaviour
             return;
         }
 
-        if (!isDraggingForFuse && EventSystem.current.IsPointerOverGameObject())
+        // Kiểm tra xem người chơi có đang bấm vào UI (nút bấm, bảng điều khiển) không
+        if (!isDraggingForFuse && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
-            indicatorRoot.SetActive(false);
-            return;
+            // Fix lỗi trên mobile: Nếu có touch thì kiểm tra touch đó có dính vào UI không
+            if (Touchscreen.current != null && Touchscreen.current.touches.Count > 0)
+            {
+                if (EventSystem.current.IsPointerOverGameObject(Touchscreen.current.touches[0].touchId.ReadValue()))
+                {
+                    indicatorRoot.SetActive(false);
+                    return;
+                }
+            }
+            else
+            {
+                indicatorRoot.SetActive(false);
+                return;
+            }
         }
 
         MoveIndicatorAndValidatePosition();
 
-        if (Input.GetMouseButtonDown(0))
+        // ==========================================
+        // THAY THẾ TOÀN BỘ LỆNH INPUT CŨ SANG CHUẨN MỚI
+        // ==========================================
+        bool isPointerDown = Pointer.current != null && Pointer.current.press.wasPressedThisFrame;
+        bool isPointerUp = Pointer.current != null && Pointer.current.press.wasReleasedThisFrame;
+        bool isRightClick = Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame;
+
+        if (isPointerDown)
         {
             if (currentMode == PlacementMode.Build)
             {
@@ -110,7 +130,7 @@ public class TowerPlacementManager : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && isDraggingForFuse)
+        if (isPointerUp && isDraggingForFuse)
         {
             isDraggingForFuse = false;
             
@@ -127,7 +147,8 @@ public class TowerPlacementManager : MonoBehaviour
             MoveIndicatorAndValidatePosition();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        // Hủy thao tác khi bấm chuột phải (Trên mobile thường dùng nút tắt/UI thay vì nút này)
+        if (isRightClick)
         {
             towerToBuild = null; 
             indicatorRoot.SetActive(false); 
@@ -136,8 +157,12 @@ public class TowerPlacementManager : MonoBehaviour
 
     void MoveIndicatorAndValidatePosition()
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = mainCamera.ScreenPointToRay(mousePosition);
+        // Chặn lỗi NullReferenceException trên điện thoại khi không có chuột
+        if (Pointer.current == null) return;
+
+        // Lấy tọa độ bằng Pointer thay vì Mouse để hỗ trợ Cảm ứng
+        Vector2 screenPosition = Pointer.current.position.ReadValue();
+        Ray ray = mainCamera.ScreenPointToRay(screenPosition);
 
         if (groundPlane.Raycast(ray, out float enterDistance))
         {
@@ -228,7 +253,6 @@ public class TowerPlacementManager : MonoBehaviour
 
         if (stats2 != null)
         {
-            // 1. XỬ LÝ ĐỒNG BỘ MÁU TRƯỚC KHI UPDATE LEVEL
             if (health1 != null && health2 != null)
             {
                 if (health1.currentHealth > health2.currentHealth)
@@ -244,45 +268,29 @@ public class TowerPlacementManager : MonoBehaviour
                         else if (targetHpPercent >= 75f)
                         {
                             health2.currentHealth = health2.maxHealth;
-                            Debug.Log("[Fuse Health] Tháp ít máu >= 75% -> Hồi phục nguyên máu!");
                         }
                         else if (targetHpPercent >= 50f)
                         {
                             health2.currentHealth += (health2.maxHealth * 0.25f);
-                            Debug.Log("[Fuse Health] Tháp ít máu từ 50%-75% -> Nhận thêm 25% máu!");
-                        }
-                        else if (targetHpPercent >= 20f)
-                        {
-                            health2.currentHealth += (health2.maxHealth * 0.75f);
-                            Debug.Log("[Fuse Health] Tháp ít máu từ 20%-50% -> Nhận thêm 75% máu!");
                         }
                         else
                         {
                             health2.currentHealth += (health2.maxHealth * 0.75f);
-                            Debug.Log("[Fuse Health] Tháp ít máu < 20% -> Nhận thêm 75% máu!");
                         }
                     }
                     else
                     {
                         health2.currentHealth += (health1.currentHealth * 0.75f);
-                        Debug.Log("[Fuse Health] Tháp nguyên liệu chưa đầy -> Tháp đích nhận thêm 75% máu của nó!");
                     }
-                }
-                else
-                {
-                    Debug.Log("[Fuse Health] Tháp nguyên liệu ít máu hơn tháp đích -> Giữ nguyên máu tháp đích!");
                 }
 
                 health2.currentHealth = Mathf.Clamp(health2.currentHealth, 0f, health2.maxHealth);
             }
 
-            // 2. TIẾN HÀNH THĂNG CẤP CHO THÁP ĐÍCH
             stats2.UpgradeTower();
 
-            // ⚡ ĐỒNG BỘ UI MỚI: Ép tháp giữ lại phải vẽ lại thanh máu xanh lá sau khi nhận thuật toán bổ sung máu
             if (health2 != null)
             {
-                // Gọi hàm xử lý fillAmount có sẵn trong TowerHealth tự lập để UI co dãn chuẩn chỉ
                 health2.SendMessage("UpdateTowerHealthBar", SendMessageOptions.DontRequireReceiver);
             }
 
@@ -292,7 +300,6 @@ public class TowerPlacementManager : MonoBehaviour
                 Destroy(successEffect, effectDuration);
             }
 
-            // 3. XÓA BỎ THÁP NGUYÊN LIỆU RA KHỎI ĐIỆN TOÁN
             Destroy(tower1);
             placedTowers.Remove(firstFuseCell);
         }
@@ -306,9 +313,8 @@ public class TowerPlacementManager : MonoBehaviour
 
             GameObject newTower = Instantiate(towerToBuild, indicatorRoot.transform.position + Vector3.up * 0.15f, Quaternion.identity);
 
-            // --- KHU VỰC KIỂM TRA ÂM THANH ĐẶT THÁP ---
             if (SoundManager.Instance != null) {
-                SoundManager.Instance.PlayUI("Build"); // Ô uiSounds đặt tên là Build
+                SoundManager.Instance.PlayUI("Build"); 
             }
 
             if (buildSuccessPrefab != null)
@@ -350,8 +356,6 @@ public class TowerPlacementManager : MonoBehaviour
             {
                 int refundAmount = (stats.configData.baseCost * stats.towerLevel) / 2;
                 EconomyManager.Instance.AddMoney(refundAmount);
-                
-                Debug.Log($"<color=green>Bán tháp {stats.towerType} Cấp {stats.towerLevel} - Thu về: {refundAmount}$</color>");
             }
 
             Destroy(towerToDelete);

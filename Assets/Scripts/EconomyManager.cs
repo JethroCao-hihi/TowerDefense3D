@@ -19,7 +19,19 @@ public class EconomyManager : MonoBehaviour
 
     void Start()
     {
-        currentMoney = startingMoney;
+        // ==========================================
+        // 1. ĐỒNG BỘ TIỀN TỪ KÉT SẮT (DataManager)
+        // ==========================================
+        if (DataManager.Instance != null)
+        {
+            currentMoney = DataManager.Instance.totalMoney;
+        }
+        else
+        {
+            // Chạy dự phòng bằng số tiền mặc định nếu bạn đang test trực tiếp scene Map1
+            currentMoney = startingMoney; 
+        }
+        
         UpdateUI();
     }
 
@@ -28,6 +40,14 @@ public class EconomyManager : MonoBehaviour
     {
         currentMoney += amount;
         UpdateUI();
+        
+        // ==========================================
+        // 2. LƯU TIỀN VÀO BỘ NHỚ KHI NHẬN ĐƯỢC
+        // ==========================================
+        if (DataManager.Instance != null) 
+        {
+            DataManager.Instance.SaveMoney(currentMoney);
+        }
     }
 
     // Hàm trừ tiền khi mua tháp (Trả về true nếu đủ tiền)
@@ -37,6 +57,15 @@ public class EconomyManager : MonoBehaviour
         {
             currentMoney -= amount;
             UpdateUI();
+            
+            // ==========================================
+            // 3. LƯU TIỀN VÀO BỘ NHỚ KHI TIÊU ĐI
+            // ==========================================
+            if (DataManager.Instance != null) 
+            {
+                DataManager.Instance.SaveMoney(currentMoney);
+            }
+            
             return true;
         }
         return false; // Không đủ tiền
